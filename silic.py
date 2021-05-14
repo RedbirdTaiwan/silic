@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import numpy as np, pandas as pd, torch, cv2, os, argparse, math
-from google.colab import files
-from google.colab.patches import cv2_imshow
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 from matplotlib import cm
