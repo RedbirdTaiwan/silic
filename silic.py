@@ -305,8 +305,8 @@ def draw_labels(silic, labels, outputpath):
   outputimage = silic.tfr(targetfilepath=outputpath, show=False)
   img_pil = Image.open(outputimage)
   width, height = img_pil.size
-  #fontpath = "model/wt011.ttf"
-  #font = ImageFont.truetype(fontpath, 9)
+  fontpath = "model/wt011.ttf"
+  font = ImageFont.truetype(fontpath, 9)
   draw = ImageDraw.Draw(img_pil)
   for index, label in labels.iterrows():
     x1 = round(label['time_begin']/silic.duration*width)
@@ -314,8 +314,7 @@ def draw_labels(silic, labels, outputpath):
     y1 = round((1-label['freq_high']/(silic.sr/2))*height)
     y2 = round((1-label['freq_low']/(silic.sr/2))*height)
     tag = '%s(%.3f)' %(label['classid'], label['score'])
-    #draw.text((x1, y1-12),  tag, font = font, fill = 'red')
-    draw.text((x1, y1-12),  tag, fill = 'red')
+    draw.text((x1, y1-12),  tag, font = font, fill = 'red')
     draw.rectangle(((x1, y1), (x2, y2)), outline='red')
   output = '%s_labels.png' %outputimage[:outputimage.rfind(".")]
   img_pil.save(output)
