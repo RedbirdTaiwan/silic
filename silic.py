@@ -134,37 +134,6 @@ class Silic:
       plt.close(fig)
       return 0
 
-  def to_video(self, step=1000, targetfilepath=None):
-    if targetfilepath and os.path.isdir(targetfilepath):
-      save_to = os.path.join(targetfilepath, '%s.mp4' %self.audio_file[:self.audio_file.rfind(".")].split('/')[-1])
-    else:
-      save_to = os.path.join('%s.mp4' %self.audio_file[:self.audio_file.rfind(".")].split('/')[-1])
-    if not self.rainbow_img.shape[0]:
-      self.tfr(targetfilepath=targetfilepath, spect_type='rainbow', show=False)
-    img_array = []
-    size = ()
-    if self.clip_length > self.duration:
-      addright = round(self.clip_length/self.duration*self.rainbow_img.shape[1]) - self.rainbow_img.shape[1]
-    else:
-      addright = round(math.ceil(self.duration/1000)*1000/self.duration*self.rainbow_img.shape[1]) - self.rainbow_img.shape[1]
-    new_cv2_img = cv2.copyMakeBorder(self.rainbow_img,0,0,0,addright,cv2.BORDER_CONSTANT)
-    for ts in range(0, self.duration, step):
-      clip_start = round(ts/self.duration*self.rainbow_img.shape[1])
-      clip_end = clip_start+round(self.clip_length/self.duration*self.rainbow_img.shape[1])
-      if clip_end > new_cv2_img.shape[1]:
-        break
-      clip = new_cv2_img[:,clip_start:clip_end]
-      print(clip_start, clip_end, self.rainbow_img.shape[1])
-      img_array.append(clip)
-      if not size:
-        height, width, layers = clip.shape
-        size = (width ,height)
-    out = cv2.VideoWriter(save_to, cv2.VideoWriter_fourcc(*'mp4v'), 1000/step, size)
-    for img in img_array:
-      out.write(img)
-    out.release()
-    return save_to
-
   def mel_to_freq(self, mel):
     if mel < 0:
       return self.fmin
@@ -179,7 +148,7 @@ class Silic:
     fh = self.mel_to_freq(1-(y-h/2))
     return [ts, te, fl, fh]
 
-  def detect(self, weights='best.pt', step=1000, conf_thres=0.1, imgsz=640, targetfilepath=None, iou_thres=0.25, soundclasses=None):
+  def detect(self, weights, step=1000, conf_thres=0.1, imgsz=640, targetfilepath=None, iou_thres=0.25, soundclasses=None):
     model = attempt_load(weights, map_location=self.device)
     names = model.module.names if hasattr(model, 'module') else model.names
     classes = [names.index(name) for name in soundclasses]
@@ -336,7 +305,7 @@ def draw_labels(silic, labels, outputpath):
   outputimage = silic.tfr(targetfilepath=outputpath, show=False)
   img_pil = Image.open(outputimage)
   width, height = img_pil.size
-  fontpath = "wt011.ttf"
+  fontpath = "model/wt011.ttf"
   font = ImageFont.truetype(fontpath, 9)
   draw = ImageDraw.Draw(img_pil)
   for index, label in labels.iterrows():
