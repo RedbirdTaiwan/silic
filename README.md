@@ -13,6 +13,10 @@ The goal of SILIC is to build an autonomous wildlife sound identification system
 ## Model
 SILIC uses [Python](https://www.python.org/) language and [yolov5 package (Glenn Jocher et al., 2020)](https://github.com/ultralytics/yolov5) to construct a object detection model. Additional [pydub (Robert, 2011)](https://github.com/jiaaro/pydub), [nnAudio (Cheuk et al., 2020)](https://github.com/KinWaiCheuk/nnAudio) and [matplotlib (Hunter, 2007)](https://matplotlib.org/) libraries were imported for audio signal processing and Time–Frequency Representation (TFR).
 
+## Datasets
+ - Training and validation: [./dataset/Training_Validation_Dataset.txt](./dataset/Training_Validation_Dataset.txt)
+ - Test with evaluation results: [./dataset/evaluation_testset.csv](./dataset/evaluation_testset.csv)
+
 ## Tutorials
  - Model Weights: ./model/exp**/best.pt
  - Lists of sounds: [./model/soundclasses.csv](./model/soundclasses.csv)
