@@ -67,6 +67,9 @@ class Silic:
     self.spec_layer = Spectrogram.STFT(sr=sr, n_fft=n_fft, hop_length=hop_length).to(self.device)
     self.spec_mel_layer = Spectrogram.MelSpectrogram(sr=sr, n_fft=n_fft, n_mels=n_mels, hop_length=hop_length, window='hann', center=True, pad_mode='reflect', power=2.0, htk=False, fmin=fmin, fmax=fmax, norm=1, verbose=True).to(self.device)
     self.rainbow_img = torch.tensor([], dtype=torch.float32, device=self.device)
+    self.model_path = None
+    self.model = None
+    self.names = None
   
   def audio(self, audio_file):
     self.audio_file = audio_file
@@ -147,12 +150,17 @@ class Silic:
     return [ts, te, fl, fh]
 
   def detect(self, weights, step=1000, conf_thres=0.1, imgsz=640, targetfilepath=None, iou_thres=0.25, soundclasses=None):
-    model = attempt_load(weights, map_location=self.device)
-    names = model.module.names if hasattr(model, 'module') else model.names
-    classes = [names.index(name) for name in soundclasses]
-    
-    if not self.rainbow_img.shape[0]:
-      self.tfr(targetfilepath=targetfilepath, spect_type='rainbow', show=False)
+    if self.model and self.model_path == weights:
+      pass
+    else:
+      self.model_path = weights
+      self.model = attempt_load(self.model_path, map_location=self.device)
+      self.names = self.model.module.names if hasattr(self.model, 'module') else self.model.names
+    if soundclasses:
+      classes = [self.names.index(name) for name in soundclasses]
+    else:
+      classes = None
+    self.tfr(targetfilepath=targetfilepath, spect_type='rainbow', show=False)
     if self.clip_length > self.duration:
       addright = round(self.clip_length/self.duration*self.rainbow_img.shape[1]) - self.rainbow_img.shape[1]
     else:
@@ -181,7 +189,7 @@ class Silic:
       if img.ndimension() == 3:
         img = img.unsqueeze(0)
       # Inference
-      pred = model(img, augment=False)[0]
+      pred = self.model(img, augment=False)[0]
       pred = non_max_suppression(pred, conf_thres=conf_thres, classes=classes)
       for det in pred:    # detections per image
         gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]    # normalization gain whwh
@@ -191,7 +199,7 @@ class Silic:
             xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()    # normalized xywh
             ttff = self.xywh2ttff(xywh)
             ts, te, fl, fh = ttff
-            labels.append([path, names[int(cls)], round(time_start+ts), round(time_start+te), fl, fh, round(float(conf),3)])
+            labels.append([path, self.names[int(cls)], round(time_start+ts), round(time_start+te), fl, fh, round(float(conf),3)])
     
     return labels
     
