@@ -11,7 +11,7 @@ from yolov5.utils.datasets import letterbox
 from yolov5.utils.general import non_max_suppression, scale_coords, xyxy2xywh
 from PIL import ImageFont, ImageDraw, Image
 
-def AudioStandarize(audio_file, sr, device=None):
+def AudioStandarize(audio_file, sr, device=None, high_pass=0):
   if not device:
     device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
   filext = audio_file[-3:].lower()
@@ -28,7 +28,8 @@ def AudioStandarize(audio_file, sr, device=None):
   else:
     print('Sorry, this file type is not permitted. The legal extensions are: wav, mp3, wma, m4a, ogg.')
     return None
-  print('Origional audio: channel = %s, sample_rate = %s Hz, sample_size = %s, duration = %s s' %(sound.channels, sound.frame_rate, len(sound.get_array_of_samples()), sound.duration_seconds))
+  original_metadata = {'channel': sound.channels, 'sample_rate':sound.frame_rate, 'sample_size':len(sound.get_array_of_samples()), 'duration':sound.duration_seconds}
+  print('Origional audio: channel = %s, sample_rate = %s Hz, sample_size = %s, duration = %s s' %(original_metadata['channel'], original_metadata['sample_rate'], original_metadata['sample_size'], original_metadata['duration']))
   if sound.frame_rate > sr:
       sound = scipy_effects.low_pass_filter(sound, sr/2)
   if sound.frame_rate != sr:
@@ -37,12 +38,14 @@ def AudioStandarize(audio_file, sr, device=None):
       sound = sound.split_to_mono()[0]
   if not sound.sample_width == 2:
       sound = sound.set_sample_width(2)
+  if high_pass:
+    sound = sound.high_pass_filter(high_pass)
   sound = effects.normalize(sound) # normalize max-amplitude to 0 dB
   songdata = np.array(sound.get_array_of_samples())
   duration = round(np.array(sound.get_array_of_samples()).shape[0]/sound.frame_rate*1000)
   audiodata = torch.tensor(songdata, device=device).float()
   print('Standarized audio: channel = %s, sample_rate = %s Hz, sample_size = %s, duration = %s s' %(sound.channels, sound.frame_rate, len(sound.get_array_of_samples()), sound.duration_seconds))
-  return sound.frame_rate, audiodata, duration, sound
+  return sound.frame_rate, audiodata, duration, sound, original_metadata
 
 class Silic:
   """
@@ -73,7 +76,7 @@ class Silic:
   
   def audio(self, audio_file):
     self.audio_file = audio_file
-    self.sr, self.audiodata, self.duration, self.sound = AudioStandarize(audio_file, self.sr, self.device)
+    self.sr, self.audiodata, self.duration, self.sound, self.original_metadata = AudioStandarize(audio_file, self.sr, self.device, high_pass=self.fmin)
     
   def tfr(self, targetfilepath=None, spect_type='linear', rainbow_bands=5, show=True):
     plt.rcParams['font.size'] = '16'
