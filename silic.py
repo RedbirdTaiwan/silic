@@ -353,8 +353,14 @@ def clean_multi_boxes(labels, threshold_iou=0.25, threshold_iratio=0.9):
   #df_results.to_csv(label_txt.replace('_origional', ''), index=0, sep='\t', encoding="utf-8")
   return df_results
 
-def draw_labels(silic, labels, outputpath):
-  outputimage = silic.tfr(targetfilepath=outputpath)
+def draw_labels(silic, labels, outputpath=None):
+  if outputpath and os.path.isdir(outputpath):
+    targetpath = os.path.join(outputpath, '%s.png'%silic.audiofilename_without_ext)
+  else:
+    if not os.path.isdir(os.path.join(silic.audiopath, 'labels')):
+      os.mkdir(os.path.join(silic.audiopath, 'labels'))
+    targetpath = os.path.join(silic.audiopath, 'labels', '%s.png'%silic.audiofilename_without_ext)
+  outputimage = silic.tfr()
   img_pil = Image.open(outputimage)
   width, height = img_pil.size
   fontpath = "model/wt011.ttf"
@@ -368,6 +374,6 @@ def draw_labels(silic, labels, outputpath):
     tag = '%s(%.3f)' %(label['classid'], label['score'])
     draw.text((x1, y1-12),  tag, font = font, fill = 'red')
     draw.rectangle(((x1, y1), (x2, y2)), outline='red')
-  img_pil.save(outputpath)
+  img_pil.save(targetpath)
   img_pil.show()
-  print(outputpath, 'saved')
+  print(targetpath, 'saved')
