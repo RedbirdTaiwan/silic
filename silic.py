@@ -42,7 +42,7 @@ def AudioStandarize(audio_file, sr, device=None, high_pass=0):
     sound = sound.high_pass_filter(high_pass)
   sound = effects.normalize(sound) # normalize max-amplitude to 0 dB
   songdata = np.array(sound.get_array_of_samples())
-  duration = round(np.array(sound.get_array_of_samples()).shape[0]/sound.frame_rate*1000)
+  duration = round(np.array(sound.get_array_of_samples()).shape[0]/sound.frame_rate*1000) #ms
   audiodata = torch.tensor(songdata, device=device).float()
   print('Standarized audio: channel = %s, sample_rate = %s Hz, sample_size = %s, duration = %s s' %(sound.channels, sound.frame_rate, len(sound.get_array_of_samples()), sound.duration_seconds))
   return sound.frame_rate, audiodata, duration, sound, original_metadata
@@ -75,10 +75,13 @@ class Silic:
     self.names = None
   
   def audio(self, audio_file):
-    self.audio_file = audio_file
+    self.audiofilename = os.path.basename(audio_file)
+    self.audiofilename_without_ext = os.path.splitext(self.audiofilename)[0]
+    self.audiopath = os.path.dirname(audio_file)
+    self.audiofileext = audio_file.split('.')[-1]
     self.sr, self.audiodata, self.duration, self.sound, self.original_metadata = AudioStandarize(audio_file, self.sr, self.device, high_pass=self.fmin)
     
-  def tfr(self, targetfilepath=None, spect_type='linear', rainbow_bands=5, show=True):
+  def spectrogram(self, audiodata, spect_type='linear', rainbow_bands=5):
     plt.rcParams['font.size'] = '16'
     plt.rcParams['axes.grid'] = False
     plt.rcParams['xtick.labelsize'] = False
@@ -89,12 +92,14 @@ class Silic:
     plt.rcParams['ytick.right'] = False
     plt.rcParams.update({'font.size': 16})
     if spect_type in ['mel', 'rainbow']:
-      spec = self.spec_mel_layer(self.audiodata)
+      spec = self.spec_mel_layer(audiodata)
       w = spec.size()[2]/55
       h = spec.size()[1]/55
       if spect_type == 'mel':
         fig = plt.figure(figsize=(w, h))
         data = torch.sqrt(torch.sqrt(torch.abs(spec[0]) + 1e-6)).cpu().numpy()
+        plt.gca().set_axis_off()
+        plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
         plt.imshow(data, origin='lower', cmap='gray_r', aspect='auto')
       elif rainbow_bands > 1:
         fig, ax = plt.subplots(rainbow_bands, gridspec_kw = {'wspace':0, 'hspace':0}, figsize=(w, h))
@@ -108,7 +113,7 @@ class Silic:
         print('Bins of Rainbow should larger than 0.')
         return False
     else:
-      spec = self.spec_layer(self.audiodata)
+      spec = self.spec_layer(audiodata)
       data = torch.sqrt(torch.sqrt(torch.abs(spec[0]) + 1e-6)).cpu().numpy()[:,:,0]
       w = data.shape[1]/100*(5/4)
       h = data.shape[0]/100*(1/4)
@@ -117,26 +122,69 @@ class Silic:
       plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
       plt.imshow(data, origin='lower', cmap='gray_r', aspect='auto')
     
-    if targetfilepath and os.path.isdir(targetfilepath):
-      save_to = os.path.join(targetfilepath, '%s.png' %self.audio_file[:self.audio_file.rfind(".")].split('/')[-1])
-      plt.savefig(save_to)
-      print('Spectrogram was saved to %s.'%save_to)
-      
+    """
+    plt.savefig(targetfilepath)
     if show:
       plt.show()
+    
+
+    if spect_type == 'rainbow' and rainbow_bands == 5:
+      self.rainbow_img = self.cv2_img
+    """
     fig.canvas.draw()
     img = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)
     img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-    self.cv2_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-    if spect_type == 'rainbow' and rainbow_bands == 5:
-      self.rainbow_img = self.cv2_img
+    cv2_img = img #cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+    plt.close(fig)
     
-    if targetfilepath and os.path.isdir(targetfilepath):
-      plt.close(fig)
-      return save_to
+    return cv2_img
+
+  def tfr(self, targetfilepath=None, spect_type='linear', rainbow_bands=5, start=0, stop=None):
+    if self.clip_length and ((self.audiodata.size()[0] / self.sr * 1000) < self.clip_length):
+        self.audiodata = torch.cat((self.audiodata, torch.zeros(round(self.clip_length*self.sr/1000)-self.audiodata.size()[0], device=self.device)), 0)
+    if not stop:
+        stop = self.duration
+    max_sample_size = 1920000
+    tmpimgs = []
+    if not targetfilepath:
+      targetfilepath = os.path.join(self.audiopath, spect_type, '%s.png'%self.audiofilename_without_ext)
+      if not os.path.isdir(os.path.dirname(targetfilepath)):
+        os.mkdir(os.path.dirname(targetfilepath))
+    if not os.path.isdir(os.path.dirname(targetfilepath)):
+      print('Error! Cannot find the target folder %s.' %os.path.dirname(targetfilepath))
+      exit()
+    if (stop - start)/1000*self.sr > (max_sample_size):
+        if not os.path.exists('tmp'):
+            try:
+                os.mkdir('tmp')
+            except:
+                print('Cannot create tmp folder!')
+                exit()
+        
+        imgs = []
+        for ts in range(int(round(start/1000*self.sr)), int(round(stop/1000*self.sr)-self.sr*0.1), max_sample_size):
+            if ts+max_sample_size > round(stop/1000*self.sr):
+              data = self.audiodata[ts:round(stop/1000*self.sr)+1]
+            else:
+              data = self.audiodata[ts:ts+max_sample_size]
+            try:
+              imgs.append(self.spectrogram(data, spect_type, rainbow_bands=rainbow_bands))
+            except:
+              print('error in converting', tmpimg)
+              exit()
+        self.cv2_img = cv2.hconcat(imgs)
     else:
-      plt.close(fig)
-      return 0
+        self.cv2_img = self.spectrogram(self.audiodata, spect_type, rainbow_bands=rainbow_bands)
+    
+    if spect_type == 'rainbow' and rainbow_bands == 5:
+      self.rainbow_img = cv2.cvtColor(self.cv2_img, cv2.COLOR_RGB2BGR)
+    
+    height, width, colors = self.cv2_img.shape
+    #cv2.imwrite(targetfilepath, self.cv2_img)
+    PILimage = Image.fromarray(self.cv2_img)
+    PILimage.save(targetfilepath, dpi=(72,72))
+    print('Spectrogram was saved to %s.'%targetfilepath)
+    return targetfilepath
 
   def mel_to_freq(self, mel):
     if mel < 0:
@@ -163,26 +211,21 @@ class Silic:
       classes = [self.names.index(name) for name in soundclasses]
     else:
       classes = None
-    self.tfr(targetfilepath=targetfilepath, spect_type='rainbow', show=False)
-    if self.clip_length > self.duration:
-      addright = round(self.clip_length/self.duration*self.rainbow_img.shape[1]) - self.rainbow_img.shape[1]
-    else:
-      addright = round(math.ceil(self.duration/1000)*1000/self.duration*self.rainbow_img.shape[1]) - self.rainbow_img.shape[1]
-    new_cv2_img = cv2.copyMakeBorder(self.rainbow_img,0,0,0,addright,cv2.BORDER_CONSTANT)
+    self.tfr(targetfilepath=targetfilepath, spect_type='rainbow')
     
     # prepare input data clips
     dataset = []
     for ts in range(0, self.duration, step):
       clip_start = round(ts/self.duration*self.rainbow_img.shape[1])
       clip_end = clip_start+round(self.clip_length/self.duration*self.rainbow_img.shape[1])
-      if clip_end > new_cv2_img.shape[1]:
+      if clip_end > self.rainbow_img.shape[1]:
         break
-      img0 = new_cv2_img[:,clip_start:clip_end]
+      img0 = self.rainbow_img[:,clip_start:clip_end]
       img = letterbox(img0, new_shape=imgsz)[0]
       # Convert
       img = img[:, :, ::-1].transpose(2, 0, 1)  # BGR to RGB, to 3x416x416
       img = np.ascontiguousarray(img)
-      dataset.append([self.audio_file, img, img0, ts])
+      dataset.append([os.path.join(self.audiopath, self.audiofilename), img, img0, ts])
     
     
     labels = [['file', 'classid', "time_begin", "time_end", "freq_low", "freq_high", "score"]]
@@ -311,7 +354,7 @@ def clean_multi_boxes(labels, threshold_iou=0.25, threshold_iratio=0.9):
   return df_results
 
 def draw_labels(silic, labels, outputpath):
-  outputimage = silic.tfr(targetfilepath=outputpath, show=False)
+  outputimage = silic.tfr(targetfilepath=outputpath)
   img_pil = Image.open(outputimage)
   width, height = img_pil.size
   fontpath = "model/wt011.ttf"
@@ -325,7 +368,6 @@ def draw_labels(silic, labels, outputpath):
     tag = '%s(%.3f)' %(label['classid'], label['score'])
     draw.text((x1, y1-12),  tag, font = font, fill = 'red')
     draw.rectangle(((x1, y1), (x2, y2)), outline='red')
-  output = '%s_labels.png' %outputimage[:outputimage.rfind(".")]
-  img_pil.save(output)
+  img_pil.save(outputpath)
   img_pil.show()
-  print(output, 'saved')
+  print(outputpath, 'saved')
