@@ -147,7 +147,7 @@ class Silic:
     max_sample_size = 1920000
     tmpimgs = []
     if not targetfilepath:
-      targetfilepath = os.path.join(self.audiopath, spect_type, '%s.png'%self.audiofilename_without_ext)
+      targetfilepath = os.path.join(self.audiopath, spect_type, '%s.jpg'%self.audiofilename_without_ext)
       if not os.path.isdir(os.path.dirname(targetfilepath)):
         os.mkdir(os.path.dirname(targetfilepath))
     if not os.path.isdir(os.path.dirname(targetfilepath)):
@@ -182,7 +182,11 @@ class Silic:
     height, width, colors = self.cv2_img.shape
     #cv2.imwrite(targetfilepath, self.cv2_img)
     PILimage = Image.fromarray(self.cv2_img)
-    PILimage.save(targetfilepath, dpi=(72,72))
+    try:
+      PILimage.save(targetfilepath, dpi=(72,72))
+    except:
+      targetfilepath = '%s.png' %targetfilepath[:-3]
+      PILimage.save(targetfilepath, dpi=(72,72))
     print('Spectrogram was saved to %s.'%targetfilepath)
     return targetfilepath
 
@@ -355,11 +359,11 @@ def clean_multi_boxes(labels, threshold_iou=0.25, threshold_iratio=0.9):
 
 def draw_labels(silic, labels, outputpath=None):
   if outputpath and os.path.isdir(outputpath):
-    targetpath = os.path.join(outputpath, '%s.png'%silic.audiofilename_without_ext)
+    targetpath = os.path.join(outputpath, '%s.jpg'%silic.audiofilename_without_ext)
   else:
     if not os.path.isdir(os.path.join(silic.audiopath, 'labels')):
       os.mkdir(os.path.join(silic.audiopath, 'labels'))
-    targetpath = os.path.join(silic.audiopath, 'labels', '%s.png'%silic.audiofilename_without_ext)
+    targetpath = os.path.join(silic.audiopath, 'labels', '%s.jpg'%silic.audiofilename_without_ext)
   outputimage = silic.tfr()
   img_pil = Image.open(outputimage)
   width, height = img_pil.size
@@ -374,6 +378,10 @@ def draw_labels(silic, labels, outputpath=None):
     tag = '%s(%.3f)' %(label['classid'], label['score'])
     draw.text((x1, y1-12),  tag, font = font, fill = 'red')
     draw.rectangle(((x1, y1), (x2, y2)), outline='red')
-  img_pil.save(targetpath)
-  img_pil.show()
+  try:
+    img_pil.save(targetpath)
+  except:
+    targetpath = '%s.png' %targetpath[:-3]
+    img_pil.save(targetpath)
+  #img_pil.show()
   print(targetpath, 'saved')
