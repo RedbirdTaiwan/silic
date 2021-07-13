@@ -385,3 +385,4 @@ def draw_labels(silic, labels, outputpath=None):
     img_pil.save(targetpath)
   #img_pil.show()
   print(targetpath, 'saved')
+  return targetpath
