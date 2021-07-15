@@ -185,7 +185,7 @@ class Silic:
     try:
       PILimage.save(targetfilepath, dpi=(72,72))
     except:
-      targetfilepath = '%s.png' %targetfilepath[:-3]
+      targetfilepath = '%spng' %targetfilepath[:-3]
       PILimage.save(targetfilepath, dpi=(72,72))
     print('Spectrogram was saved to %s.'%targetfilepath)
     return targetfilepath
@@ -381,7 +381,7 @@ def draw_labels(silic, labels, outputpath=None):
   try:
     img_pil.save(targetpath)
   except:
-    targetpath = '%s.png' %targetpath[:-3]
+    targetpath = '%spng' %targetpath[:-3]
     img_pil.save(targetpath)
   #img_pil.show()
   print(targetpath, 'saved')
