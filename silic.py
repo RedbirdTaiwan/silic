@@ -90,6 +90,8 @@ class Silic:
     if not os.path.isdir(os.path.dirname(targetmp3path)):
       os.mkdir(os.path.dirname(targetmp3path))
     self.sound.export(targetmp3path, bitrate="128k", format="mp3")
+    print('Standarized audio was saved to %s' %targetmp3path)
+    return targetmp3path
     
   def spectrogram(self, audiodata, spect_type='linear', rainbow_bands=5):
     plt.rcParams['font.size'] = '16'
