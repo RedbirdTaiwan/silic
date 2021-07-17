@@ -58,7 +58,7 @@ class Silic:
         fmax (int): if False, yolov5 logs will be silent
         clip_length (int):
   """
-  def __init__(self, sr=32000, n_fft=1600, hop_length=400, n_mels=240, fmin=100, fmax=15000):
+  def __init__(self, sr=32000, n_fft=1600, hop_length=400, n_mels=240, fmin=100, fmax=15000, device=None):
     self.sr = sr
     self.n_fft = n_fft
     self.hop_length = hop_length
@@ -66,7 +66,10 @@ class Silic:
     self.fmin = fmin
     self.fmax = fmax
     self.clip_length = 3000
-    self.device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+    if device:
+      self.device = device
+    else:
+      self.device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
     self.spec_layer = Spectrogram.STFT(sr=sr, n_fft=n_fft, hop_length=hop_length).to(self.device)
     self.spec_mel_layer = Spectrogram.MelSpectrogram(sr=sr, n_fft=n_fft, n_mels=n_mels, hop_length=hop_length, window='hann', center=True, pad_mode='reflect', power=2.0, htk=False, fmin=fmin, fmax=fmax, norm=1, verbose=True).to(self.device)
     self.rainbow_img = torch.tensor([], dtype=torch.float32, device=self.device)
