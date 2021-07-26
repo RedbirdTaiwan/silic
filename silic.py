@@ -11,7 +11,19 @@ from yolov5.utils.datasets import letterbox
 from yolov5.utils.general import non_max_suppression, scale_coords, xyxy2xywh
 from PIL import ImageFont, ImageDraw, Image
 
-def AudioStandarize(audio_file, sr, device=None, high_pass=0):
+def speed_change(sound, speed=1.0):
+    # Manually override the frame_rate. This tells the computer how many
+    # samples to play per second
+    sound_with_altered_frame_rate = sound._spawn(sound.raw_data, overrides={
+        "frame_rate": int(sound.frame_rate * speed)
+    })
+    # convert the sound with altered frame rate to a standard frame rate
+    # so that regular playback programs will work right. They often only
+    # know how to play audio at standard frame rate (like 44.1k)
+    print(sound_with_altered_frame_rate.frame_rate)
+    return sound_with_altered_frame_rate.set_frame_rate(int(sound.frame_rate*speed))
+
+def AudioStandarize(audio_file, sr, device=None, high_pass=0, ultrasonic=False):
   if not device:
     device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
   filext = audio_file[-3:].lower()
@@ -30,6 +42,11 @@ def AudioStandarize(audio_file, sr, device=None, high_pass=0):
     return None
   original_metadata = {'channel': sound.channels, 'sample_rate':sound.frame_rate, 'sample_size':len(sound.get_array_of_samples()), 'duration':sound.duration_seconds}
   print('Origional audio: channel = %s, sample_rate = %s Hz, sample_size = %s, duration = %s s' %(original_metadata['channel'], original_metadata['sample_rate'], original_metadata['sample_size'], original_metadata['duration']))
+  if ultrasonic:
+      if sound.frame_rate > 100000: # UltraSonic
+          sound = speed_change(sound, 1/12)
+      else:
+          return False
   if sound.frame_rate > sr:
       sound = scipy_effects.low_pass_filter(sound, sr/2)
   if sound.frame_rate != sr:
@@ -77,12 +94,12 @@ class Silic:
     self.model = None
     self.names = None
   
-  def audio(self, audio_file):
+  def audio(self, audio_file, ultrasonic=False):
     self.audiofilename = os.path.basename(audio_file)
     self.audiofilename_without_ext = os.path.splitext(self.audiofilename)[0]
     self.audiopath = os.path.dirname(audio_file)
     self.audiofileext = audio_file.split('.')[-1]
-    self.sr, self.audiodata, self.duration, self.sound, self.original_metadata = AudioStandarize(audio_file, self.sr, self.device, high_pass=self.fmin)
+    self.sr, self.audiodata, self.duration, self.sound, self.original_metadata = AudioStandarize(audio_file, self.sr, self.device, high_pass=self.fmin, ultrasonic=ultrasonic)
 
   def save_standarized(self, targetmp3path=None):
     if not targetmp3path:
