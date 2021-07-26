@@ -83,6 +83,15 @@ class Silic:
     self.audiopath = os.path.dirname(audio_file)
     self.audiofileext = audio_file.split('.')[-1]
     self.sr, self.audiodata, self.duration, self.sound, self.original_metadata = AudioStandarize(audio_file, self.sr, self.device, high_pass=self.fmin)
+
+  def save_standarized(self, targetmp3path=None):
+    if not targetmp3path:
+      targetmp3path = os.path.join(self.audiopath, 'mp3', '%s.mp3'%self.audiofilename_without_ext)
+    if not os.path.isdir(os.path.dirname(targetmp3path)):
+      os.mkdir(os.path.dirname(targetmp3path))
+    self.sound.export(targetmp3path, bitrate="128k", format="mp3")
+    print('Standarized audio was saved to %s' %targetmp3path)
+    return targetmp3path
     
   def spectrogram(self, audiodata, spect_type='linear', rainbow_bands=5):
     plt.rcParams['font.size'] = '16'
