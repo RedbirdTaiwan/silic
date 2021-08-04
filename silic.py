@@ -37,6 +37,8 @@ def AudioStandarize(audio_file, sr, device=None, high_pass=0, ultrasonic=False):
       sound = AudioSegment.from_ogg(audio_file)
   elif filext == "wav":
       sound = AudioSegment.from_wav(audio_file)
+  elif filext in ["mp4", "wma", "aac"]:
+      sound = AudioSegment.from_file(audio_file, filext)
   else:
     print('Sorry, this file type is not permitted. The legal extensions are: wav, mp3, wma, m4a, ogg.')
     return None
