@@ -106,8 +106,8 @@ class Silic:
   def save_standarized(self, targetmp3path=None):
     if not targetmp3path:
       targetmp3path = os.path.join(self.audiopath, 'mp3', '%s.mp3'%self.audiofilename_without_ext)
-    if not os.path.isdir(os.path.dirname(targetmp3path)):
-      os.mkdir(os.path.dirname(targetmp3path))
+      if not os.path.isdir(os.path.dirname(targetmp3path)):
+        os.mkdir(os.path.dirname(targetmp3path))
     self.sound.export(targetmp3path, bitrate="128k", format="mp3")
     print('Standarized audio was saved to %s' %targetmp3path)
     return targetmp3path
