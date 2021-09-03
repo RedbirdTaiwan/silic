@@ -18,8 +18,9 @@ SILIC uses [Python](https://www.python.org/) language and [yolov5 package (Glenn
  - Test with evaluation results: [./dataset/evaluation_testset.csv](./dataset/evaluation_testset.csv)
 
 ## Tutorials
- - Model Weights: ./model/exp**/best.pt
- - Lists of sounds: [./model/soundclasses.csv](./model/soundclasses.csv)
+ - Model Weights:
+   -  [./model/exp12](./model/exp12) , including 27 sound classes of 16 species, updated on Apr. 2021
+   -  [./model/exp14](./model/exp14) , including 74 sound classes of 52 species, updated on Jul. 2021
  - Scripts of detection: [./silic.ipynb](./silic.ipynb)
 
 ## Audio Sources
