@@ -1,195 +1,195 @@
 sounclass_id,species_name,sound_class,scientific_name,freq_low,freq_high
-1,¶Â«a³ÂÆO,S-01,Gorsachius melanolophus,244,516
-6,¤K¦â³¾,S-01,Pitta nympha,1326,2416
-7,¥Õ¦Õµe¬Ü,C-01,Heterophasia auricularis,2483,6572
-9,¥Õ¦Õµe¬Ü,S-01,Heterophasia auricularis,1911,4368
-10,¿P?,C-01,Glareola maldivarum,1217,3652
-14,ÆNÃY,S-01,Hierococcyx sparverioides,1469,2941
-19,¥_¤è¤¤§ùÃY,S-01,Cuculus optatus,348,673
-21,Â¸²´µe¬Ü,C-02,Alcippe morrisonia,3972,6721
-22,Â¸²´µe¬Ü,S-01,Alcippe morrisonia,2678,6898
-28,¤­¦â³¾,S-01,Psilopogon nuchalis,739,1272
-29,¤­¦â³¾,U-01,Psilopogon nuchalis,852,1256
-32,»A³¾,U-01,Alcedo atthis,4837,6388
-33,¤pÄ|?,C-01,Vanellus vanellus,1161,4467
-39,«n¨È©]ÆN,S-01,Caprimulgus affinis,2374,5472
-40,¾ğÄN,C-01,Dendrocitta formosae,1463,2664
-41,¾ğÄN,C-02,Dendrocitta formosae,1484,2892
-54,¤p¨÷§À,S-01,Dicrurus aeneus,1616,3841
-60,ºñµe¬Ü,S-01,Erpornis zantholeuca,5167,7407
-65,ï¢ö¿,C-01,Glaucidium brodiei,831,1204
-66,ï¢ö¿,S-01,Glaucidium brodiei,829,1228
-67,¤pÅa,S-01,Horornis fortipes,1644,5239
-72,¶ÂªEÂÅöÈ,S-01,Hypothymis azurea,2107,6373
-77,¬õ¼L¶Âóí,S-01,Hypsipetes leucocephalus,2587,5316
-84,ªLóç,S-01,Ictinaetus malaiensis,1691,2607
-85,¬õ§À§B³Ò,C-01,Lanius cristatus,2707,7320
-88,½ÅÆNì¦,S-01,Ninox japonica,410,813
-93,¦¶ùÏ,S-01,Oriolus traillii,447,909
-94,ÄõÀ¬¨¤ì¦,S-02,Otus elegans,675,1260
-95,ÄõÀ¬¨¤ì¦,S-01,Otus elegans,569,1029
-97,»â¨¤ì¦,C-01,Otus lettia,4314,10489
-98,»â¨¤ì¦,S-01,Otus lettia,429,1071
-99,»â¨¤ì¦,U,Otus lettia,447,1125
-100,¶À¼L¨¤ì¦,C-01,Otus spilocephalus,1233,1834
-101,¶À¼L¨¤ì¦,S-01,Otus spilocephalus,1358,1748
-102,¶À¼L¨¤ì¦,U-01,Otus spilocephalus,1287,3273
-105,¤j«aøl,S-01,Spilornis cheela,1285,2048
-110,¯]ÀV´³¹§,S-01,Streptopelia chinensis,489,995
-111,¤j¨ª°Ö¤ì,C-01,Dendrocopos leucotos,2359,4502
-112,¤j¨ª°Ö¤ì,O-01,Dendrocopos leucotos,316,2077
-113,½ÅªLì¦,C-01,Strix leptogrammica,568,1778
-115,½ÅªLì¦,S-01,Strix leptogrammica,228,582
-116,ªF¤è¦ÇªLì¦,S-01,Strix nivicolum,320,769
-118,¶À¯İÃÁ¬Ü,C-01,Liocichla steerii,2012,6667
-122,¶À¯İÃÁ¬Ü,S-01,Liocichla steerii,2581,5642
-123,»OÆW¤sÅÂÀl,S-03,Arborophila crudigularis,1525,2367
-124,¤ü,C-01,Canis lupus familiaris,394,940
-125,¥Ûªê,C-01,Prionailurus bengalensis,0,10000
-126,¤p¥ÕÆO,C-01,Egretta garzetta,485,2963
-132,®ß­IªLì©,C-01,Tarsiger johnstoniae,2784,4301
-143,¤pÅs¼L,S-02,Pomatorhinus musicus,805,1487
-144,¤pÅs¼L,S-03,Pomatorhinus musicus,1551,2844
-152,»OÆW¦ËÂû,S-01,Bambusicola sonorivox,1269,2967
-153,»OÆW¦ËÂû,S-02,Bambusicola sonorivox,2537,3548
-159,»OÆWÂO¾ğÅa,S-01,Locustella alishanensis,2297,3775
-167,¤jÅs¼L,S-03,Megapomatorhinus erythrocnemis,1123,2029
-182,»OÆW¾¸¬Ü,S-01,Trochalopteron morrisonianum,1988,3393
-186,¶À¤s³¶,S-01,Machlolophus holsti,2121,6823
-198,´Ä­±Åa,S-01,Abroscopus albogularis,4662,4985
-199,¤p«B¿P,C-01,Apus nipalensis,3627,6195
-207,¤s¬õÀY,S-01,Cyanoderma ruficeps,1903,2263
-208,¤p°Ö¤ì,C-01,Dendrocopos canicapillus,1863,7715
-212,²`¤sÅa,C-01,Horornis acanthizoides,3495,8970
-213,«C­I¤s³¶,S-01,Parus monticolus,3560,4643
-214,²`¤sÅa,S-01a,Horornis acanthizoides,4870,5636
-215,¬õÀY¤s³¶,C-01,Aegithalos concinnus,5300,8801
-223,¦ÇÀYøkÅa,S-01,Prinia flaviventris,2087,8133
-228,ÀY¯Q½u,S-01,Schoeniparus brunneus,2289,3664
-232,¥Õ¬ÜªLì©,S-01,Tarsiger indicus,2451,4456
-235,´µ¤óÂ¸²´,C-02,Zosterops simplex,3914,6139
-238,¦Ç¸}¯±Âû,S-01,Rallina eurizonoides,533,1350
-240,¤¤°ê¾ğÃÊ,S-01,Hyla chinensis,1738,5267
-244,¸¡´³µì,S-01,Babina adenopleura,528,3470
-247,ªø¸}¨ªµì,S-01,Rana longicrus,771,1767
-249,©P¤ó¾ğµì,S-01,Buergeria choui,1580,5902
-251,¦ã¤ó¾ğµì,S-01,Kurixalus eiffingeri,2290,4479
-252,­±¤Ñ¾ğµì,S-01,Kurixalus idiootocus,2188,2521
-258,»O¥_¾ğµì,S-01,Rhacophorus taipeianus,1130,2175
-262,ªê¥Öµì,S-01,Hoplobatrachus rugulosus,435,2504
-263,°^¼w¤ó¨ªµì,S-01,Hylarana guentheri,162,3660
-264,¤p«Bµì,S-01,Microhyla fissipes,947,4013
-266,©Ô³£§Æ¤ó¨ªµì,S-01,Hylarana latouchii,643,3674
-268,´µ¤å»¨¤ó¨ªµì,S-01,Odorrana swinhoana,1472,6025
-274,¥¬¤ó¾ğµì,S-01,Polypedates braueri,528,4168
-278,¤Ó¥Ğ¾ğµì,S-01,Buergeria otai,2988,3327
-279,»OÆW¤sÅÂÀl,S-01,Arborophila crudigularis,991,1940
-280,»OÆW¤sÅÂÀl,S-02,Arborophila crudigularis,1246,1682
-283,¥Õ­±ÄÓ¹«,S-01,Petaurista alborufus,981,4110
-286,ÆN´³øf,C-01,Tringa glareola,2795,4379
-290,»ñÀY»aÆN,S-01,Accipiter trivirgatus,2898,4389
-292,ªø§kªQ¹«,C-01,Dremomys pernyi,958,7034
-294,»â¨¤ì¦,S-02,Otus lettia,416,1373
-297,ªQ³¶ÆN,C-01,Accipiter virgatus,3059,4270
-298,ÂÅ¸¡øp,U-01,Lophura swinhoii,537,1436
-299,ÂÅ¸¡øp,U-02,Lophura swinhoii,2363,7571
-300,¶Âªø§À¹n,U-01,Syrmaticus mikado,322,1374
-307,¥Õ¸¡¯±Âû,S-01,Amaurornis phoenicurus,699,1243
-308,¥Õ¸¡¯±Âû,S-02,Amaurornis phoenicurus,682,1108
-313,¬õ«a¤ôÂû,C-01,Gallinula chloropus,1072,3558
-314,¦ÇªLÂF,S-01,Columba pulchricollis,141,457
-315,ª÷­I¹§,S-01,Streptopelia orientalis,298,606
-316,¬õ¹§,S-01,Streptopelia tranquebarica,368,654
-317,»AÁl¹§,S-01,Chalcophaps indica,332,552
-320,ºñ¹§,S-01,Treron sieboldii,650,1044
-323,µfÃY,S-01,Centropus bengalensis,622,1135
-324,«a¦Ğµe¬Ü,S-01,Yuhina brunneiceps,2063,5036
-325,ºñ°Ö¤ì,S-01,Picus canus,1950,2555
-326,ºñ°Ö¤ì,O-01,Picus canus,415,2156
-333,¬v¿P,C-01,Hirundo tahitica,2041,6851
-335,¨ª¸y¿P,C-01,Cecropis striolata,2493,4521
-338,¥ÕÀôÆx¼Lóí,S-01,Spizixos semitorques,1700,4056
-340,¥ÕÀY¯Î,S-01,Pycnonotus sinensis,1469,3704
-342,¥ÕÀY¯Î,C-01,Pycnonotus sinensis,1697,4357
-347,´Ä­I§B³Ò,C-01,Lanius schach,1533,5212
-349,ªe¯Q,C-01,Cinclus pallasii,3680,5231
-351,økøc,S-01,Troglodytes troglodytes,3435,8501
-354,©¥÷º,C-01,Prunella collaris,2698,4903
-357,¹]¦â¤ôóğ,S-01,Phoenicurus fuliginosus,3138,7801
-361,¥Õ§Àì©,S-01,Cinclidium leucurum,2913,4919
-362,¥Õ§Àì©,C-01,Cinclidium leucurum,4279,4652
-365,¶À¯İ«CöÈ,S-01,Ficedula hyperythra,5123,7845
-367,¶À¸¡¯[¼ş,S-01,Niltava vivida,3124,5400
-369,»OÆWµµ¼Sóğ,C-01,Myophonus insularis,3095,5808
-373,¥ÕÀYóğ,C-01,Turdus niveiceps,1496,2847
-374,¤pÁlóğ,S-01,Brachypteryx goodfellowi,1493,5817
-375,½ÅÀYªáÁl,S-01,Fulvetta formosana,4043,6502
-378,·Ñ¤s³¶,S-01,Periparus ater,3848,6519
-381,¯óì¦,C-01,Tyto longimembris,1723,2524
-382,´¼¤H,rooster,Homo sapiens,515,1053
-383,¥ÕöÀÀo,C-01,Motacilla alba,3184,7223
-386,¯»¬õÆx¼L,C-02,Sinosuthora webbiana,3634,5048
-387,¶À¦ĞÆx¼L,C-01,Suthora verreauxi,3693,6468
-396,´Ä¾¸¬Ü,S-01,Ianthocincla poecilorhyncha,1402,2242
-401,¯¾Álµe¬Ü,C-01,Actinodura morrisoniana,2748,8696
-402,¯¾Álµe¬Ü,U-01,Actinodura morrisoniana,2189,2981
-410,´Ä®°§ÀÅa,S-01,Cisticola juncidis,4490,4862
-412,¶ÀÀY®°§ÀÅa,S-01a,Cisticola exilis,1466,7798
-416,´³¯¾økÅa,S-01,Prinia crinigera,2882,7510
-419,½ÅÀYøkÅa,S-01,Prinia inornata,3629,5832
-422,¤õ«aÀ¹µâ³¾,S-01,Regulus goodfellowi,7659,10162
-430,¨ª¸¡¤s³¶,S-01,Sittiparus castaneoventris,5802,8258
-431,¨ª¸¡¤s³¶,C-01,Sittiparus castaneoventris,6124,8740
-432,¯ù¸¡?,S-01,Sitta europaea,2703,3807
-437,¯ù¸¡?,C-03,Sitta europaea,6161,9494
-438,ºñ°Öªá,S-01,Dicaeum minullum,5703,8000
-441,¬õ¯İ°Öªá,S-01,Dicaeum ignipectus,4697,8712
-446,»OÆW¦¶³¶,C-01,Carpodacus formosanus,5549,6701
-448,½Åøæ,S-01,Pyrrhula nipalensis,2161,4637
-451,¦Çøæ,C-01,Pyrrhula erythaca,2286,3003
-456,»OÆW³¥¤s¦Ï,C-01,Capricornis swinhoei,1382,3798
-457,¤j¨ªÄÓ¹«,C-03,Petaurista philippensis,465,1646
-459,³Â³¶,C-01,Passer montanus,3094,6005
-463,¶ÀùÏ,S-01,Oriolus chinensis,1085,2553
-465,¤j¨÷§À,S-01,Dicrurus macrocercus,1715,4645
-466,ºñ°Ö¤ì,C-01,Picus canus,1288,2168
-467,ªQ¾~,C-01,Garrulus glandarius,1370,8644
-468,»OÆWÂÅÄN,C-01,Urocissa caerulea,1546,4166
-469,¬P¾~,C-01,Nucifraga caryocatactes,1176,3720
-471,¥¨¼L¾~,C-01,Corvus macrorhynchos,461,1635
-472,¶À³½ì¦,S-01,Ketupa flavipes,71,423
-473,ÀôÀV¹n,C-01,Phasianus colchicus,936,4546
-474,ÀôÀV¹n,C-02,Phasianus colchicus,777,4429
-475,¤sªÊ,C-01,Muntiacus reevesi,665,1446
-477,¤j¨ªÄÓ¹«,C-01,Petaurista philippensis,5015,13524
-478,¤pÅs¼L,S-06,Pomatorhinus musicus,764,1381
-486,´¼¤H,Speech_Song,Homo sapiens,184,1082
-491,½ÅÆNì¦,S-02,Ninox japonica,363,967
-528,½ÅªLì¦,U-01,Strix leptogrammica,221,831
-529,¬Ğ§Àç²ªê,C-01,Hemidactylus frenatus,1611,4952
-531,¯óì¦,C-02,Tyto longimembris,929,5193
-533,¶À³½ì¦,C-01,Ketupa flavipes,2426,5741
-547,¤pÄOÄL,S-01,Synoicus chinensis,1903,3034
-549,¤pÄOÄL,S-03,Synoicus chinensis,938,1522
-551,»OÆW¤ô³À,C-01,Rusa unicolor,1143,2633
-552,»OÆW¤ô³À,C-02,Rusa unicolor,546,1811
-553,¤pÀôÀV?,C-01,Charadrius dubius,2201,3429
-554,¥Õ¸y¤å³¾,C-01,Lonchura striata,3439,5091
-555,´³¤å³¾,C-01,Lonchura punctulata,3443,4209
-556,´µ¤å»¨¤ó¨ªµì,S-02,Odorrana swinhoana,262,1175
-557,´Ä®°§ÀÅa,S-02,Cisticola juncidis,4922,7951
-559,²`¤sÅa,S-01b,Horornis acanthizoides,3506,4299
-561,¤¤¥ÕÆO,C-01,Mesophoyx intermedia,664,1505
-562,ÁFøf,C-01,Actitis hypoleucos,4610,5569
-563,ªF¤è¶ÀöÀÀo,C-01,Motacilla tschutschensis,4582,7383
-564,´¼¤H,H-01,Homo sapiens,102,1143
-565,¦ÇöÀÀo,C-01,Motacilla cinerea,4997,7777
-566,¶ÂÁy?,C-01,Emberiza spodocephala,7020,10053
-567,ªá¼LÀn,C-01,Anas zonorhyncha,742,2704
-568,¤p¶³³¶,S-01a,Alauda gulgula,2517,6344
-569,¤p¶³³¶,S-01b,Alauda gulgula,2403,6403
-570,¤p¶³³¶,S-01c,Alauda gulgula,2759,6450
-571,´Ä¨F¿P,C-01,Riparia chinensis,2861,7246
-572,¶ÀÀY®°§ÀÅa,S-01b,Cisticola exilis,1563,3694
-574,¶À¯İ«CöÈ,C-01,Ficedula hyperythra,7546,8318
-576,¶À¦ĞÆx¼L,C-03,Suthora verreauxi,3955,5832
+1,é»‘å† éº»é·º,S-01,Gorsachius melanolophus,244,516
+6,å…«è‰²é³¥,S-01,Pitta nympha,1326,2416
+7,ç™½è€³ç•«çœ‰,C-01,Heterophasia auricularis,2483,6572
+9,ç™½è€³ç•«çœ‰,S-01,Heterophasia auricularis,1911,4368
+10,ç‡•é´´,C-01,Glareola maldivarum,1217,3652
+14,é·¹éµ‘,S-01,Hierococcyx sparverioides,1469,2941
+19,åŒ—æ–¹ä¸­æœéµ‘,S-01,Cuculus optatus,348,673
+21,ç¹¡çœ¼ç•«çœ‰,C-02,Alcippe morrisonia,3972,6721
+22,ç¹¡çœ¼ç•«çœ‰,S-01,Alcippe morrisonia,2678,6898
+28,äº”è‰²é³¥,S-01,Psilopogon nuchalis,739,1272
+29,äº”è‰²é³¥,U-01,Psilopogon nuchalis,852,1256
+32,ç¿ é³¥,U-01,Alcedo atthis,4837,6388
+33,å°è¾®é´´,C-01,Vanellus vanellus,1161,4467
+39,å—äºå¤œé·¹,S-01,Caprimulgus affinis,2374,5472
+40,æ¨¹éµ²,C-01,Dendrocitta formosae,1463,2664
+41,æ¨¹éµ²,C-02,Dendrocitta formosae,1484,2892
+54,å°å·å°¾,S-01,Dicrurus aeneus,1616,3841
+60,ç¶ ç•«çœ‰,S-01,Erpornis zantholeuca,5167,7407
+65,éµ‚é¶¹,C-01,Glaucidium brodiei,831,1204
+66,éµ‚é¶¹,S-01,Glaucidium brodiei,829,1228
+67,å°é¶¯,S-01,Horornis fortipes,1644,5239
+72,é»‘æ•è—é¶²,S-01,Hypothymis azurea,2107,6373
+77,ç´…å˜´é»‘éµ¯,S-01,Hypsipetes leucocephalus,2587,5316
+84,æ—éµ°,S-01,Ictinaetus malaiensis,1691,2607
+85,ç´…å°¾ä¼¯å‹,C-01,Lanius cristatus,2707,7320
+88,è¤é·¹é´,S-01,Ninox japonica,410,813
+93,æœ±é¸,S-01,Oriolus traillii,447,909
+94,è˜­å¶¼è§’é´,S-02,Otus elegans,675,1260
+95,è˜­å¶¼è§’é´,S-01,Otus elegans,569,1029
+97,é ˜è§’é´,C-01,Otus lettia,4314,10489
+98,é ˜è§’é´,S-01,Otus lettia,429,1071
+99,é ˜è§’é´,U,Otus lettia,447,1125
+100,é»ƒå˜´è§’é´,C-01,Otus spilocephalus,1233,1834
+101,é»ƒå˜´è§’é´,S-01,Otus spilocephalus,1358,1748
+102,é»ƒå˜´è§’é´,U-01,Otus spilocephalus,1287,3273
+105,å¤§å† é·²,S-01,Spilornis cheela,1285,2048
+110,ç é ¸æ–‘é³©,S-01,Streptopelia chinensis,489,995
+111,å¤§èµ¤å•„æœ¨,C-01,Dendrocopos leucotos,2359,4502
+112,å¤§èµ¤å•„æœ¨,O-01,Dendrocopos leucotos,316,2077
+113,è¤æ—é´,C-01,Strix leptogrammica,568,1778
+115,è¤æ—é´,S-01,Strix leptogrammica,228,582
+116,æ±æ–¹ç°æ—é´,S-01,Strix nivicolum,320,769
+118,é»ƒèƒ¸è—ªçœ‰,C-01,Liocichla steerii,2012,6667
+122,é»ƒèƒ¸è—ªçœ‰,S-01,Liocichla steerii,2581,5642
+123,è‡ºç£å±±é·“é´£,S-03,Arborophila crudigularis,1525,2367
+124,çŠ¬,C-01,Canis lupus familiaris,394,940
+125,çŸ³è™,C-01,Prionailurus bengalensis,0,10000
+126,å°ç™½é·º,C-01,Egretta garzetta,485,2963
+132,æ —èƒŒæ—é´,C-01,Tarsiger johnstoniae,2784,4301
+143,å°å½å˜´,S-02,Pomatorhinus musicus,805,1487
+144,å°å½å˜´,S-03,Pomatorhinus musicus,1551,2844
+152,è‡ºç£ç«¹é›,S-01,Bambusicola sonorivox,1269,2967
+153,è‡ºç£ç«¹é›,S-02,Bambusicola sonorivox,2537,3548
+159,è‡ºç£å¢æ¨¹é¶¯,S-01,Locustella alishanensis,2297,3775
+167,å¤§å½å˜´,S-03,Megapomatorhinus erythrocnemis,1123,2029
+182,è‡ºç£å™ªçœ‰,S-01,Trochalopteron morrisonianum,1988,3393
+186,é»ƒå±±é›€,S-01,Machlolophus holsti,2121,6823
+198,æ£•é¢é¶¯,S-01,Abroscopus albogularis,4662,4985
+199,å°é›¨ç‡•,C-01,Apus nipalensis,3627,6195
+207,å±±ç´…é ­,S-01,Cyanoderma ruficeps,1903,2263
+208,å°å•„æœ¨,C-01,Dendrocopos canicapillus,1863,7715
+212,æ·±å±±é¶¯,C-01,Horornis acanthizoides,3495,8970
+213,é’èƒŒå±±é›€,S-01,Parus monticolus,3560,4643
+214,æ·±å±±é¶¯,S-01a,Horornis acanthizoides,4870,5636
+215,ç´…é ­å±±é›€,C-01,Aegithalos concinnus,5300,8801
+223,ç°é ­é·¦é¶¯,S-01,Prinia flaviventris,2087,8133
+228,é ­çƒç·š,S-01,Schoeniparus brunneus,2289,3664
+232,ç™½çœ‰æ—é´,S-01,Tarsiger indicus,2451,4456
+235,æ–¯æ°ç¹¡çœ¼,C-02,Zosterops simplex,3914,6139
+238,ç°è…³ç§§é›,S-01,Rallina eurizonoides,533,1350
+240,ä¸­åœ‹æ¨¹èŸ¾,S-01,Hyla chinensis,1738,5267
+244,è…¹æ–‘è›™,S-01,Babina adenopleura,528,3470
+247,é•·è…³èµ¤è›™,S-01,Rana longicrus,771,1767
+249,å‘¨æ°æ¨¹è›™,S-01,Buergeria choui,1580,5902
+251,è‰¾æ°æ¨¹è›™,S-01,Kurixalus eiffingeri,2290,4479
+252,é¢å¤©æ¨¹è›™,S-01,Kurixalus idiootocus,2188,2521
+258,è‡ºåŒ—æ¨¹è›™,S-01,Rhacophorus taipeianus,1130,2175
+262,è™çš®è›™,S-01,Hoplobatrachus rugulosus,435,2504
+263,è²¢å¾·æ°èµ¤è›™,S-01,Hylarana guentheri,162,3660
+264,å°é›¨è›™,S-01,Microhyla fissipes,947,4013
+266,æ‹‰éƒ½å¸Œæ°èµ¤è›™,S-01,Hylarana latouchii,643,3674
+268,æ–¯æ–‡è±ªæ°èµ¤è›™,S-01,Odorrana swinhoana,1472,6025
+274,å¸ƒæ°æ¨¹è›™,S-01,Polypedates braueri,528,4168
+278,å¤ªç”°æ¨¹è›™,S-01,Buergeria otai,2988,3327
+279,è‡ºç£å±±é·“é´£,S-01,Arborophila crudigularis,991,1940
+280,è‡ºç£å±±é·“é´£,S-02,Arborophila crudigularis,1246,1682
+283,ç™½é¢é¼¯é¼ ,S-01,Petaurista alborufus,981,4110
+286,é·¹æ–‘é·¸,C-01,Tringa glareola,2795,4379
+290,é³³é ­è’¼é·¹,S-01,Accipiter trivirgatus,2898,4389
+292,é•·å»æ¾é¼ ,C-01,Dremomys pernyi,958,7034
+294,é ˜è§’é´,S-02,Otus lettia,416,1373
+297,æ¾é›€é·¹,C-01,Accipiter virgatus,3059,4270
+298,è—è…¹é·´,U-01,Lophura swinhoii,537,1436
+299,è—è…¹é·´,U-02,Lophura swinhoii,2363,7571
+300,é»‘é•·å°¾é›‰,U-01,Syrmaticus mikado,322,1374
+307,ç™½è…¹ç§§é›,S-01,Amaurornis phoenicurus,699,1243
+308,ç™½è…¹ç§§é›,S-02,Amaurornis phoenicurus,682,1108
+313,ç´…å† æ°´é›,C-01,Gallinula chloropus,1072,3558
+314,ç°æ—é´¿,S-01,Columba pulchricollis,141,457
+315,é‡‘èƒŒé³©,S-01,Streptopelia orientalis,298,606
+316,ç´…é³©,S-01,Streptopelia tranquebarica,368,654
+317,ç¿ ç¿¼é³©,S-01,Chalcophaps indica,332,552
+320,ç¶ é³©,S-01,Treron sieboldii,650,1044
+323,ç•ªéµ‘,S-01,Centropus bengalensis,622,1135
+324,å† ç¾½ç•«çœ‰,S-01,Yuhina brunneiceps,2063,5036
+325,ç¶ å•„æœ¨,S-01,Picus canus,1950,2555
+326,ç¶ å•„æœ¨,O-01,Picus canus,415,2156
+333,æ´‹ç‡•,C-01,Hirundo tahitica,2041,6851
+335,èµ¤è…°ç‡•,C-01,Cecropis striolata,2493,4521
+338,ç™½ç’°é¸šå˜´éµ¯,S-01,Spizixos semitorques,1700,4056
+340,ç™½é ­ç¿,S-01,Pycnonotus sinensis,1469,3704
+342,ç™½é ­ç¿,C-01,Pycnonotus sinensis,1697,4357
+347,æ£•èƒŒä¼¯å‹,C-01,Lanius schach,1533,5212
+349,æ²³çƒ,C-01,Cinclus pallasii,3680,5231
+351,é·¦é·¯,S-01,Troglodytes troglodytes,3435,8501
+354,å²©é·š,C-01,Prunella collaris,2698,4903
+357,é‰›è‰²æ°´é¶‡,S-01,Phoenicurus fuliginosus,3138,7801
+361,ç™½å°¾é´,S-01,Cinclidium leucurum,2913,4919
+362,ç™½å°¾é´,C-01,Cinclidium leucurum,4279,4652
+365,é»ƒèƒ¸é’é¶²,S-01,Ficedula hyperythra,5123,7845
+367,é»ƒè…¹ç‰ç’ƒ,S-01,Niltava vivida,3124,5400
+369,è‡ºç£ç´«å˜¯é¶‡,C-01,Myophonus insularis,3095,5808
+373,ç™½é ­é¶‡,C-01,Turdus niveiceps,1496,2847
+374,å°ç¿¼é¶‡,S-01,Brachypteryx goodfellowi,1493,5817
+375,è¤é ­èŠ±ç¿¼,S-01,Fulvetta formosana,4043,6502
+378,ç…¤å±±é›€,S-01,Periparus ater,3848,6519
+381,è‰é´,C-01,Tyto longimembris,1723,2524
+382,æ™ºäºº,rooster,Homo sapiens,515,1053
+383,ç™½é¶ºé´’,C-01,Motacilla alba,3184,7223
+386,ç²‰ç´…é¸šå˜´,C-02,Sinosuthora webbiana,3634,5048
+387,é»ƒç¾½é¸šå˜´,C-01,Suthora verreauxi,3693,6468
+396,æ£•å™ªçœ‰,S-01,Ianthocincla poecilorhyncha,1402,2242
+401,ç´‹ç¿¼ç•«çœ‰,C-01,Actinodura morrisoniana,2748,8696
+402,ç´‹ç¿¼ç•«çœ‰,U-01,Actinodura morrisoniana,2189,2981
+410,æ£•æ‰‡å°¾é¶¯,S-01,Cisticola juncidis,4490,4862
+412,é»ƒé ­æ‰‡å°¾é¶¯,S-01a,Cisticola exilis,1466,7798
+416,æ–‘ç´‹é·¦é¶¯,S-01,Prinia crinigera,2882,7510
+419,è¤é ­é·¦é¶¯,S-01,Prinia inornata,3629,5832
+422,ç«å† æˆ´èŠé³¥,S-01,Regulus goodfellowi,7659,10162
+430,èµ¤è…¹å±±é›€,S-01,Sittiparus castaneoventris,5802,8258
+431,èµ¤è…¹å±±é›€,C-01,Sittiparus castaneoventris,6124,8740
+432,èŒ¶è…¹é³¾,S-01,Sitta europaea,2703,3807
+437,èŒ¶è…¹é³¾,C-03,Sitta europaea,6161,9494
+438,ç¶ å•„èŠ±,S-01,Dicaeum minullum,5703,8000
+441,ç´…èƒ¸å•„èŠ±,S-01,Dicaeum ignipectus,4697,8712
+446,è‡ºç£æœ±é›€,C-01,Carpodacus formosanus,5549,6701
+448,è¤é·½,S-01,Pyrrhula nipalensis,2161,4637
+451,ç°é·½,C-01,Pyrrhula erythaca,2286,3003
+456,è‡ºç£é‡å±±ç¾Š,C-01,Capricornis swinhoei,1382,3798
+457,å¤§èµ¤é¼¯é¼ ,C-03,Petaurista philippensis,465,1646
+459,éº»é›€,C-01,Passer montanus,3094,6005
+463,é»ƒé¸,S-01,Oriolus chinensis,1085,2553
+465,å¤§å·å°¾,S-01,Dicrurus macrocercus,1715,4645
+466,ç¶ å•„æœ¨,C-01,Picus canus,1288,2168
+467,æ¾é´‰,C-01,Garrulus glandarius,1370,8644
+468,è‡ºç£è—éµ²,C-01,Urocissa caerulea,1546,4166
+469,æ˜Ÿé´‰,C-01,Nucifraga caryocatactes,1176,3720
+471,å·¨å˜´é´‰,C-01,Corvus macrorhynchos,461,1635
+472,é»ƒé­šé´,S-01,Ketupa flavipes,71,423
+473,ç’°é ¸é›‰,C-01,Phasianus colchicus,936,4546
+474,ç’°é ¸é›‰,C-02,Phasianus colchicus,777,4429
+475,å±±ç¾Œ,C-01,Muntiacus reevesi,665,1446
+477,å¤§èµ¤é¼¯é¼ ,C-01,Petaurista philippensis,5015,13524
+478,å°å½å˜´,S-06,Pomatorhinus musicus,764,1381
+486,æ™ºäºº,Speech_Song,Homo sapiens,184,1082
+491,è¤é·¹é´,S-02,Ninox japonica,363,967
+528,è¤æ—é´,U-01,Strix leptogrammica,221,831
+529,ç–£å°¾èè™,C-01,Hemidactylus frenatus,1611,4952
+531,è‰é´,C-02,Tyto longimembris,929,5193
+533,é»ƒé­šé´,C-01,Ketupa flavipes,2426,5741
+547,å°éµªé¶‰,S-01,Synoicus chinensis,1903,3034
+549,å°éµªé¶‰,S-03,Synoicus chinensis,938,1522
+551,è‡ºç£æ°´é¹¿,C-01,Rusa unicolor,1143,2633
+552,è‡ºç£æ°´é¹¿,C-02,Rusa unicolor,546,1811
+553,å°ç’°é ¸é´´,C-01,Charadrius dubius,2201,3429
+554,ç™½è…°æ–‡é³¥,C-01,Lonchura striata,3439,5091
+555,æ–‘æ–‡é³¥,C-01,Lonchura punctulata,3443,4209
+556,æ–¯æ–‡è±ªæ°èµ¤è›™,S-02,Odorrana swinhoana,262,1175
+557,æ£•æ‰‡å°¾é¶¯,S-02,Cisticola juncidis,4922,7951
+559,æ·±å±±é¶¯,S-01b,Horornis acanthizoides,3506,4299
+561,ä¸­ç™½é·º,C-01,Mesophoyx intermedia,664,1505
+562,ç£¯é·¸,C-01,Actitis hypoleucos,4610,5569
+563,æ±æ–¹é»ƒé¶ºé´’,C-01,Motacilla tschutschensis,4582,7383
+564,æ™ºäºº,H-01,Homo sapiens,102,1143
+565,ç°é¶ºé´’,C-01,Motacilla cinerea,4997,7777
+566,é»‘è‡‰éµ,C-01,Emberiza spodocephala,7020,10053
+567,èŠ±å˜´é´¨,C-01,Anas zonorhyncha,742,2704
+568,å°é›²é›€,S-01a,Alauda gulgula,2517,6344
+569,å°é›²é›€,S-01b,Alauda gulgula,2403,6403
+570,å°é›²é›€,S-01c,Alauda gulgula,2759,6450
+571,æ£•æ²™ç‡•,C-01,Riparia chinensis,2861,7246
+572,é»ƒé ­æ‰‡å°¾é¶¯,S-01b,Cisticola exilis,1563,3694
+574,é»ƒèƒ¸é’é¶²,C-01,Ficedula hyperythra,7546,8318
+576,é»ƒç¾½é¸šå˜´,C-03,Suthora verreauxi,3955,5832
