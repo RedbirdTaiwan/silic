@@ -384,9 +384,7 @@ def clean_multi_boxes(labels, threshold_iou=0.25, threshold_iratio=0.9):
           df_results = df_results.append(df_class[df_class.index == i], ignore_index = True)
         else:
           df_results = df_class[df_class.index == i]
-  df_results.sort_values('time_begin').reset_index(drop=True)
-  #df_results.to_csv(label_txt.replace('_origional', ''), index=0, sep='\t', encoding="utf-8")
-  return df_results
+  return df_results.sort_values('time_begin').reset_index(drop=True)
 
 def draw_labels(silic, labels, outputpath=None):
   if outputpath and os.path.isdir(outputpath):
