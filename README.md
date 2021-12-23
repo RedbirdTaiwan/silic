@@ -35,4 +35,4 @@ SILIC uses [Python](https://www.python.org/) language and [yolov5 package (Glenn
  - [iNaturalist](https://www.inaturalist.org/)
 
 ## Publication
-
+- [Wu, S.-H., Chang, H.-W., Lin, R.-S., & Tuanmu, M.-N. (2022). SILIC: A cross database framework for automatically extracting robust biodiversity information from soundscape recordings based on object detection and a tiny training dataset. Ecological Informatics, 68, 101534. https://doi.org/10.1016/j.ecoinf.2021.101534](https://doi.org/10.1016/j.ecoinf.2021.101534)
