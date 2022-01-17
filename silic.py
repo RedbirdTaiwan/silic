@@ -77,7 +77,7 @@ class Silic:
         fmax (int): if False, yolov5 logs will be silent
         clip_length (int):
   """
-  def __init__(self, sr=32000, n_fft=1600, hop_length=400, n_mels=240, fmin=100, fmax=15000, device=None, clip_length = 3000):
+  def __init__(self, sr=32000, n_fft=1600, hop_length=400, n_mels=240, fmin=100, fmax=15000, device=None, clip_length=3000):
     self.sr = sr
     self.n_fft = n_fft
     self.hop_length = hop_length
@@ -205,7 +205,7 @@ class Silic:
               exit()
         self.cv2_img = cv2.hconcat(imgs)
     else:
-        self.cv2_img = self.spectrogram(self.audiodata, spect_type, rainbow_bands=rainbow_bands)
+        self.cv2_img = self.spectrogram(self.audiodata[int(round(start/1000*self.sr)):int(round(stop/1000*self.sr))], spect_type, rainbow_bands=rainbow_bands)
     
     if spect_type == 'rainbow' and rainbow_bands == 5:
       self.rainbow_img = cv2.cvtColor(self.cv2_img, cv2.COLOR_RGB2BGR)
