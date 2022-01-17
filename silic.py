@@ -77,14 +77,14 @@ class Silic:
         fmax (int): if False, yolov5 logs will be silent
         clip_length (int):
   """
-  def __init__(self, sr=32000, n_fft=1600, hop_length=400, n_mels=240, fmin=100, fmax=15000, device=None):
+  def __init__(self, sr=32000, n_fft=1600, hop_length=400, n_mels=240, fmin=100, fmax=15000, device=None, clip_length = 3000):
     self.sr = sr
     self.n_fft = n_fft
     self.hop_length = hop_length
     self.n_mels = n_mels
     self.fmin = fmin
     self.fmax = fmax
-    self.clip_length = 3000
+    self.clip_length = clip_length
     if device:
       self.device = device
     else:
