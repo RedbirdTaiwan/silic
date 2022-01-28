@@ -127,7 +127,7 @@ class Silic:
       w = spec.size()[2]/55
       h = spec.size()[1]/55
       if spect_type == 'mel':
-        fig = plt.figure(figsize=(w, h), dpi=72)
+        fig = plt.figure(figsize=(w, h), dpi=100)
         data = torch.sqrt(torch.sqrt(torch.abs(spec[0]) + 1e-6)).cpu().numpy()
         plt.gca().set_axis_off()
         plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
@@ -148,7 +148,7 @@ class Silic:
       data = torch.sqrt(torch.sqrt(torch.abs(spec[0]) + 1e-6)).cpu().numpy()[:,:,0]
       w = data.shape[1]/100*(5/4)*2
       h = data.shape[0]/100*(1/4)*2
-      fig = plt.figure(figsize=(w, h), dpi=72)
+      fig = plt.figure(figsize=(w, h), dpi=100)
       plt.gca().set_axis_off()
       plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
       plt.imshow(data, origin='lower', cmap='gray_r', aspect='auto')
