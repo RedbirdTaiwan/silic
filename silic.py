@@ -271,7 +271,7 @@ class Silic:
         img = img.unsqueeze(0)
       # Inference
       pred = self.model(img, augment=False)[0]
-      pred = non_max_suppression(pred, conf_thres=conf_thres, classes=classes)
+      pred = non_max_suppression(pred, conf_thres=conf_thres, iou_thres=iou_thres, classes=classes)
       for det in pred:    # detections per image
         gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]    # normalization gain whwh
         if len(det):
