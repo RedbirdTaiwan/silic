@@ -124,8 +124,8 @@ class Silic:
     plt.rcParams.update({'font.size': 16})
     if spect_type in ['mel', 'rainbow']:
       spec = self.spec_mel_layer(audiodata)
-      w = spec.size()[2]/55
-      h = spec.size()[1]/55
+      w = spec.size()[2]/39.6
+      h = spec.size()[1]/39.6
       if spect_type == 'mel':
         fig = plt.figure(figsize=(w, h))
         data = torch.sqrt(torch.sqrt(torch.abs(spec[0]) + 1e-6)).cpu().numpy()
