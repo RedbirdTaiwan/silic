@@ -5,7 +5,6 @@ from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 from matplotlib import cm
 from pydub import AudioSegment, effects, scipy_effects
 from nnAudio import Spectrogram
-from yolov5.detect import detect as yolov5_detect
 from yolov5.models.experimental import attempt_load
 from yolov5.utils.datasets import letterbox
 from yolov5.utils.general import non_max_suppression, scale_coords, xyxy2xywh
