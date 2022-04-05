@@ -68,13 +68,13 @@ def AudioStandarize(audio_file, sr=32000, device=None, high_pass=0, ultrasonic=F
 class Silic:
   """
     Arguments:
-        sr (int): path of the model
-        n_fft (int): path of the config file
-        hop_length (str): select device that model will be loaded (cpu, cuda)
-        n_mels (int): load pretrained weights into the model
-        fmin (int): make model ready for inference
-        fmax (int): if False, yolov5 logs will be silent
-        clip_length (int):
+        sr (int): Sampling Rate in Hz
+        n_fft (int): Window(Frame) Size in samples
+        hop_length (str): Frame Step (or Hop Size) in samples
+        n_mels (int): The number of Mel filter banks
+        fmin (int): The starting frequency for the lowest Mel filter bank in Hz
+        fmax (int): The ending frequency for the highest Mel filter bank in Hz
+        clip_length (int): The duration of each inference in ms
   """
   def __init__(self, sr=32000, n_fft=1600, hop_length=400, n_mels=240, fmin=100, fmax=15000, device=None, clip_length=3000):
     self.sr = sr
@@ -94,6 +94,7 @@ class Silic:
     self.model_path = None
     self.model = None
     self.names = None
+    self.soundclasses = None
   
   def audio(self, audio_file, ultrasonic=False):
     self.audiofilename = os.path.basename(audio_file)
@@ -175,7 +176,6 @@ class Silic:
     if not stop:
         stop = self.duration
     max_sample_size = 1920000
-    tmpimgs = []
     if not targetfilepath:
       targetfilepath = os.path.join(self.audiopath, spect_type, '%s.jpg'%self.audiofilename_without_ext)
       if not os.path.isdir(os.path.dirname(targetfilepath)):
@@ -200,7 +200,7 @@ class Silic:
             try:
               imgs.append(self.spectrogram(data, spect_type, rainbow_bands=rainbow_bands))
             except:
-              print('error in converting', tmpimg)
+              print('error in converting')
               exit()
         self.cv2_img = cv2.hconcat(imgs)
     else:
@@ -234,15 +234,16 @@ class Silic:
     fh = self.mel_to_freq(1-(y-h/2))
     return [ts, te, fl, fh]
 
-  def detect(self, weights, step=1000, conf_thres=0.1, imgsz=640, targetfilepath=None, iou_thres=0.25, soundclasses=None):
+  def detect(self, weights, step=1000, conf_thres=0.1, imgsz=640, targetfilepath=None, iou_thres=0.25, targetclasses=None):
     if self.model and self.model_path == weights:
       pass
     else:
       self.model_path = weights
       self.model = attempt_load(self.model_path, map_location=self.device)
       self.names = self.model.module.names if hasattr(self.model, 'module') else self.model.names
-    if soundclasses:
-      classes = [self.names.index(name) for name in soundclasses]
+      self.soundclasses = pd.read_csv(self.model_path.replace('best.pt', 'soundclass.csv'), encoding='utf8').to_dict()
+    if targetclasses:
+      classes = [self.names.index(name) for name in targetclasses]
     else:
       classes = None
     self.tfr(targetfilepath=targetfilepath, spect_type='rainbow')
@@ -262,7 +263,7 @@ class Silic:
       dataset.append([os.path.join(self.audiopath, self.audiofilename), img, img0, ts])
     
     
-    labels = [['file', 'classid', "time_begin", "time_end", "freq_low", "freq_high", "score"]]
+    labels = [['file', 'classid', 'species_name', 'sound_class', 'scientific_name', "time_begin", "time_end", "freq_low", "freq_high", "score"]]
     for path, img, im0, time_start in dataset:
       img = torch.from_numpy(img).float().to(self.device)
       img /= 255.0  # 0 - 255 to 0.0 - 1.0
@@ -279,7 +280,11 @@ class Silic:
             xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()    # normalized xywh
             ttff = self.xywh2ttff(xywh)
             ts, te, fl, fh = ttff
-            labels.append([path, self.names[int(cls)], round(time_start+ts), round(time_start+te), fl, fh, round(float(conf),3)])
+            classid = self.names[int(cls)]
+            species_name = self.soundclasses[classid]['species_name']
+            sound_class = self.soundclasses[classid]['sound_class']
+            scientific_name = self.soundclasses[classid]['scientific_name']
+            labels.append([path, classid, species_name, sound_class, scientific_name, round(time_start+ts), round(time_start+te), fl, fh, round(float(conf),3)])
     
     return labels
     
@@ -403,7 +408,7 @@ def draw_labels(silic, labels, outputpath=None):
     x2 = round(label['time_end']/silic.duration*width)
     y1 = round((1-label['freq_high']/(silic.sr/2))*height)
     y2 = round((1-label['freq_low']/(silic.sr/2))*height)
-    tag = '%s(%.3f)' %(label['classid'], label['score'])
+    tag = '%s%s(%.3f)' %(label['species_name'], label['sound_class'], label['score'])
     draw.text((x1, y1-12),  tag, font = font, fill = 'red')
     draw.rectangle(((x1, y1), (x2, y2)), outline='red')
   try:
