@@ -241,7 +241,7 @@ class Silic:
       self.model_path = weights
       self.model = attempt_load(self.model_path, map_location=self.device)
       self.names = self.model.module.names if hasattr(self.model, 'module') else self.model.names
-      self.soundclasses = pd.read_csv(self.model_path.replace('best.pt', 'soundclass.csv'), encoding='utf8').to_dict()
+      self.soundclasses = pd.read_csv(self.model_path.replace('best.pt', 'soundclass.csv'), encoding='utf8', index_col='sounclass_id').T.to_dict()
     if targetclasses:
       classes = [self.names.index(name) for name in targetclasses]
     else:
