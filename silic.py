@@ -22,7 +22,7 @@ def speed_change(sound, speed=1.0):
     print(sound_with_altered_frame_rate.frame_rate)
     return sound_with_altered_frame_rate.set_frame_rate(int(sound.frame_rate*speed))
 
-def AudioStandarize(audio_file, sr, device=None, high_pass=0, ultrasonic=False):
+def AudioStandarize(audio_file, sr=32000, device=None, high_pass=0, ultrasonic=False):
   if not device:
     device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
   filext = audio_file[-3:].lower()
@@ -60,9 +60,9 @@ def AudioStandarize(audio_file, sr, device=None, high_pass=0, ultrasonic=False):
     sound = sound.high_pass_filter(high_pass)
   sound = effects.normalize(sound) # normalize max-amplitude to 0 dB
   songdata = np.array(sound.get_array_of_samples())
-  duration = round(np.array(sound.get_array_of_samples()).shape[0]/sound.frame_rate*1000) #ms
+  duration = round(songdata.shape[0]/sound.frame_rate*1000) #ms
   audiodata = torch.tensor(songdata, device=device).float()
-  print('Standarized audio: channel = %s, sample_rate = %s Hz, sample_size = %s, duration = %s s' %(sound.channels, sound.frame_rate, len(sound.get_array_of_samples()), sound.duration_seconds))
+  print('Standarized audio: channel = %s, sample_rate = %s Hz, sample_size = %s, duration = %s s' %(sound.channels, sound.frame_rate, songdata.shape[0], sound.duration_seconds))
   return sound.frame_rate, audiodata, duration, sound, original_metadata
 
 class Silic:
