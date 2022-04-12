@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>SILIC</title>
+
+  <link href="silic/all.css" rel="stylesheet" type="text/css">
+</head>
+
+<body onload="init();">
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <h5>SILIC - Sound Identification and Labeling Intelligence for Creatures 生物音智慧辨識與標記系統</h5>
+    </nav>
+    <div id="wrapper" class="container-fluid">
+        <div class="row" style="width:100%">
+            <div class="col-12 mt-2">
+                <div id="audios" class="overflow-auto" style="height: 100px;"></div>
+            </div>
+            <div class="col-12 mt-2">
+                <div class="row">
+                    <div class="col-3 text-center">
+                        <p class="w-100" id="box"></p>
+                        <select class="form-control" id="sounds" onchange="renaudios();" multiple>
+                        </select>
+                        Score: <input id="threshold_min" type="number" min="0" max="1" value="0.5" step="0.01" onchange="renaudios();" style="width: 60px"> ~ <input id="threshold_max" type="number" min="0" max="1" value="1" step="0.01" onchange="renaudios();" style="width: 60px">
+                        <div class="card text-white bg-success">
+                            <div class="card-body" style="font-size: 0.75em;">
+                                <button type="button" class="btn btn-primary btn-sm mr-1" OnClick="to_audio(this, 'Previous');">Previous</button><div class="d-inline" id="audioid"></div><button type="button" class="btn btn-primary btn-sm ml-1" OnClick="to_audio(this, 'next');">Next</button>
+                                <table width="100%" id="label_table">
+                                    <thead>
+                                        <tr>
+                                            <th>play</th>
+                                            <th>Labels</th>
+                                            <th>Ts</th>
+                                            <th>Te</th>
+                                            <th>Fl</th>
+                                            <th>Fh</th>
+                                            <th>score</th>
+                                            <th>copy</th>
+                                        </tr>
+                                    <tr></tr></thead>
+                                    <tbody>
+                                        <tr>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-9 text-center mb-3">
+                        <div class="row">
+                            <div class="col-12 col-xl-4">
+                                <audio id="myAudio" style="width:100%" controls="" preload="auto">
+                                    <source src="" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+                            <div class="col-12 col-xl-8">
+                                縮放：
+                                <input type="range" min="10" max="229" value="30" onchange="var w = (230-this.value)*50; d3.select('#spectrogram').attr('viewBox', '0 0 '+w+' 572');"> 對比：
+                                <input type="range" min="10" max="100" value="0" onchange="document.getElementById('R').setAttribute('exponent', this.value/10);document.getElementById('G').setAttribute('exponent', this.value/10);document.getElementById('B').setAttribute('exponent', this.value/10);"> 亮度：
+                                <input type="range" min="10" max="100" value="0" onchange="document.getElementById('R').setAttribute('amplitude', this.value/10);document.getElementById('G').setAttribute('amplitude', this.value/10);document.getElementById('B').setAttribute('amplitude', this.value/10);">
+                            </div> 
+                        </div>
+                        <svg width="95%" id="spectrogram" viewBox="0,0,1200,572" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background-color:white;">
+                            <g id="axis_x" transform="scale(1)">
+                                <filter id="duotone">
+                                    <fecomponenttransfer color-interpolation-filters="sRGB">
+                                        <fefuncr id="R" type="gamma" exponent="1" amplitude="1"></fefuncr>
+                                        <fefuncg id="G" type="gamma" exponent="1" amplitude="1"></fefuncg>
+                                        <fefuncb id="B" type="gamma" exponent="1" amplitude="1"></fefuncb>
+                                    </fecomponenttransfer>
+                                </filter>
+                                
+                                <image id="spec" x="300" y="20" height="512" xlink:href="" filter="url(#duotone)"></image>
+                                
+                                <rect id="base_h" x="40" y="131.18482971191406" height="1" width="99999" style="fill:blue"></rect>
+                                <rect id="base_v" x="10218.0751953125" y="20" height="512" width="1" style="fill:blue"></rect>
+						        <circle id='orangepointer' cx="40" cy="20" r="5" style="fill:orange; stroke:black" />
+                                <g id="labels_inact"></g>
+                            <g id="actgroup">
+                            </g>
+                            </g>
+                            <line id="vline" x1="300" y1="20" x2="300" y2="532" stroke-dasharray="5, 5" style="stroke:green; stroke-width:1" />
+                            <g id="axis_y">
+                                <line x1="40" y1="20" x2="40" y2="532" style="stroke:black;stroke-width:2" />
+                                <rect x="0" y="20" height="515" width="40" fill="white" />
+                                <rect x="0" y="532" height="50" width="24" fill="white" />
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="silic/all.js"></script>
+    <script src="silic/soundclass.js"></script>
+    <script src="silic/labels.js"></script>
+    <script type="text/javascript">
+        function init(){
+            renaudios(0.5);
+        }
+    </script>
+  
+<script>
+    const perlength = 256;
+    const au = document.getElementById('myAudio');
+	const audiolists = document.getElementById('audios');
+    var svg = d3.select("#axis_x");
+    var actg = d3.select("#actgroup");
+    var labels_inact = d3.select("#labels_inact");
+    var base_h = d3.select("#base_h");
+    var base_v = d3.select("#base_v");
+    var t1 = d3.select("#orangepointer");
+    var label = actg.append('rect').style('fill-opacity', 0.1).style('fill', 'blue').style('stroke', 'blue');
+    var p1 = svg.append('circle').attr('r', 0);
+    var p2 = svg.append('circle').attr('r', 0);
+    var px1, px2, py1, py2, lable_w, lable_h;
+    var drag = d3.behavior.drag()
+        .on('dragstart', function() {
+            p1.attr('cx', d3.mouse(this)[0]).attr('cy', d3.mouse(this)[1]);
+        })
+        .on('drag', function() {
+            p2.attr('cx', d3.mouse(this)[0]).attr('cy', d3.mouse(this)[1])
+            if (parseFloat(p1.attr('cx')) < parseFloat(p2.attr('cx'))) {
+                px1 = parseFloat(p1.attr('cx'));
+                px2 = parseFloat(p2.attr('cx'));
+            } else {
+                px1 = parseFloat(p2.attr('cx'));
+                px2 = parseFloat(p1.attr('cx'));
+            }
+            if (parseFloat(p1.attr('cy')) < parseFloat(p2.attr('cy'))) {
+                py1 = parseFloat(p1.attr('cy'));
+                py2 = parseFloat(p2.attr('cy'));
+            } else {
+                py1 = parseFloat(p2.attr('cy'));
+                py2 = parseFloat(p1.attr('cy'));
+            }
+            lable_w = px2 - px1;
+            lable_h = py2 - py1;
+            label.attr('x', px1).attr('y', py1).attr('width', lable_w).attr('height', lable_h).style('stroke', 'blue');
+        })
+        .on('dragend', function() {
+            f_h = (1 - (py1 - 20) / 512) * 16;
+            t_s = (px1 - 40) / perlength - 260 / perlength;
+            f_l = (1 - (py2 - 20) / 512) * 16;
+            t_e = (px2 - 40) / perlength - 260 / perlength;
+            var box = document.getElementById('audioid').innerHTML + ',,' + t_s.toFixed(3) + ',' + t_e.toFixed(3) + ',' + (f_l*1000).toFixed(0) + ',' + (f_h*1000).toFixed(0);
+            navigator.clipboard.writeText(box);
+			//修正chrome不安全網頁禁止使用剪貼簿 把網站設入白名單 chrome://flags/#unsafely-treat-insecure-origin-as-secure
+            document.getElementById('box').innerHTML = 'BOX：'+box;
+        });
+    svg.on("mousemove", mousemove);
+    t1.call(drag);
+
+    function mousemove(d, i) {
+        var t = 0;
+        var s = 0;
+        if (d3.mouse(this)[1] <= 532 && d3.mouse(this)[1] >= 20) {
+            base_h.attr('y', d3.mouse(this)[1]);
+            t1.attr('cy', d3.mouse(this)[1]);
+            s = (1 - (d3.mouse(this)[1] - 20) / 512) * 16;
+        }
+        if (d3.mouse(this)[0] <= (au.duration * perlength) + 300 && d3.mouse(this)[0] >= 300) {
+            base_v.attr('x', d3.mouse(this)[0]);
+            t1.attr('cx', d3.mouse(this)[0]);
+            t = d3.mouse(this)[0] / perlength - 300 / perlength;
+        }
+    }
+
+    setInterval(function(){d3.select("#axis_x").transition().duration().attr('transform','translate('+(-au.currentTime*perlength)+')');},10);
+	//drawlabels();
+    $(document).ready(function() {
+        drawaxis();
+        soundclassselection();
+    });
+
+    function playaudio(b, start, stop) {
+        var audiolength = au.duration * 1000;
+        var cT = au.currentTime * 1000;
+        if (b.innerHTML == "Play") {
+            if(cT != start){
+                au.currentTime = start/1000;
+            }
+        }
+        var refreshIntervalId = setInterval(function() {
+            if (au.currentTime > stop / 1000) {
+                au.pause();
+                b.innerHTML = "Play";
+                clearInterval(refreshIntervalId);
+            }
+        }, 10);
+        if (b.innerHTML != "暫停") {
+            au.play();
+            b.innerHTML = "暫停";
+        } else {
+            au.pause();
+            b.innerHTML = "繼續";
+        }
+    }
+
+    function drawaxis() {
+        var audiolength = document.getElementById('myAudio').duration;
+        if (audiolength) {;
+        } else {
+            audiolength = 60 * 10;
+        }
+        var svg = d3.select("#spectrogram");
+        var axis_x = d3.select("#axis_x");
+        var axis_y = d3.select("#axis_y");
+        for (var i = 0; i <= 16; i++) {
+            axis_y.append('line').attr('x1', 34).attr('x2', 40).attr('y1', 20 + i * 32).attr('y2', 20 + i * 32).style('stroke', 'black').style('stroke-width', 1);
+            var svgText = axis_y.append("text");
+            
+            svgText.attr("x", 28).attr("y", i * 32 + 24).attr("text-anchor", "end").text((16 - i) + "k");
+            
+        }
+        axis_x.append('rect').attr('x', 40).attr('y', 532).attr('width', audiolength * perlength + 800).attr('height', 1).style('fill', 'black');
+        
+        for (var i = 0; i <= Math.ceil(audiolength + 1) * 2; i++) {
+            axis_x.append('line').attr('x1', 300 + i * perlength / 2).attr('x2', 300 + i * perlength / 2).attr('y1', 532).attr('y2', 542).style('stroke', 'black').style('stroke-width', 1);
+            var svgText = axis_x.append("text");
+            svgText.attr("x", 300 + perlength / 2 * i).attr("y", 557).attr("text-anchor", "middle").text((i / 2));
+        }
+        
+    }
+
+    function drawlabels(audioid) {
+		labels_inact.selectAll("*").remove();
+		var threshold_min = document.getElementById('threshold_min').value;
+		var threshold_max = document.getElementById('threshold_max').value;
+		var label_table = document.getElementById('label_table');
+		while (label_table.rows.length > 1) {
+			label_table.deleteRow(-1);
+		}
+		for (var i = 0; i < labels.length; i++) {
+			if ( (labels[i][6] >= threshold_min) && (labels[i][6] <= threshold_max) && (labels[i][0].substring(0,labels[i][0].length-4) == audioid) && (($('#sounds').val() == '') || ($('#sounds').val().includes(labels[i][5].toString())))){
+				var s_x = 300 + labels[i][1] * perlength / 1000;
+				var s_y = 20 + 512 * (16000 - labels[i][4]) / 16000;
+				var s_h = (labels[i][4] - labels[i][3]) / 16000 * 512;
+				var s_w = (labels[i][2] / 1000 - labels[i][1] / 1000) * perlength;
+				var txt = sounds[labels[i][5]][0] + '：' + sounds[labels[i][5]][1] + '(' + labels[i][6] + ')';
+				var labelonsvg = labels_inact.append('g').attr('class', i);
+				labelonsvg.append('rect').attr('x', s_x).attr('y', s_y).attr('height', s_h).attr('width', s_w).style('stroke', 'red').style('fill-opacity', '0');
+				labelonsvg.append('rect').attr('x', s_x).attr('y', s_y - 21).attr('height', "20").attr('width', txt.length * 12).style('fill', 'black').style('stroke', 'white');
+				labelonsvg.append('text').text(txt).attr('x', s_x + 3).attr('y', s_y - 6).style('fill', 'white').style('font-size', '14px');
+				var row = label_table.insertRow(-1);
+				row.insertCell(0).innerHTML = '<button onclick="playaudio(this,' + labels[i][1] + ',' + labels[i][2] + ');" type="button">Play</button>';
+				row.insertCell(1).innerHTML = sounds[labels[i][5]][0] + '：' + sounds[labels[i][5]][1];
+				row.insertCell(2).innerHTML = labels[i][1] / 1000;
+				row.insertCell(3).innerHTML = labels[i][2] / 1000;
+				row.insertCell(4).innerHTML = labels[i][3];
+				row.insertCell(5).innerHTML = labels[i][4];
+				row.insertCell(6).innerHTML = labels[i][6];
+				row.insertCell(7).innerHTML = '<button type="button" onclick="copylabel(this);">Copy</button>';
+			}
+		}
+		$("#spec").attr("xlink:href", "linear/"+audioid+".jpg");
+		document.getElementById('myAudio').src = audioid+".wav";
+		document.getElementById('audioid').innerHTML = audioid;
+    }
+	
+	function renaudios(){
+		var threshold_min = document.getElementById('threshold_min').value;
+		var threshold_max = document.getElementById('threshold_max').value;
+		var audioslist = '';
+		var audios = [];
+		for (var i = 0; i < labels.length; i++) {
+			if ( (labels[i][6] >= threshold_min) && (labels[i][6] <= threshold_max) && (($('#sounds').val() == '') || ($('#sounds').val().includes(labels[i][5].toString())))) {
+				audioid = labels[i][0].substring(0,labels[i][0].length-4);
+				if(!audios.includes(audioid)){
+					audios.push(audioid);
+				}
+			}
+		}
+        if (audios.length > 0){
+            audios.sort();
+            for (var i = 0; i < audios.length; i++){
+                audioslist += '<button class="btn btn-outline-primary btn-sm m-1" onclick="drawlabels(this.innerHTML)">'+audios[i]+'</button>';
+            }
+        }
+		audiolists.innerHTML = audioslist;
+	}
+
+    function soundclassselection(){
+        for(var key in sounds) {
+            var opt = document.createElement('option');
+            opt.value = key;
+            opt.innerHTML = sounds[key][0] + sounds[key][1];
+            document.getElementById('sounds').appendChild(opt);
+        };
+        new MultipleSelect('#sounds', {
+            placeholder: '選擇物種'
+        })
+    }
+	
+	function to_audio(e, direction){
+		var aus = audiolists.children;
+		for (var i = 0; i < aus.length; i++){
+			if(aus[i].innerHTML == e.parentElement.children[1].innerHTML){
+				if(direction=='next'){
+					aus[i+1].click();
+				}else{
+					aus[i-1].click();
+				}
+				break;
+			}
+		}
+	}
+	
+    function copylabel(e){
+        var label = document.getElementById('audioid').innerHTML;
+        var labeltable = e.parentElement.parentElement;
+        label += "," + labeltable.children[1].innerHTML;
+        label += "," + labeltable.children[2].innerHTML;
+        label += "," + labeltable.children[3].innerHTML;
+        label += "," + labeltable.children[4].innerHTML;
+        label += "," + labeltable.children[5].innerHTML;
+        label += "," + labeltable.children[6].innerHTML;
+        navigator.clipboard.writeText(label);
+		//修正chrome不安全網頁禁止使用剪貼簿 把網站設入白名單 chrome://flags/#unsafely-treat-insecure-origin-as-secure
+    }
+</script>
+
+</body></html>
