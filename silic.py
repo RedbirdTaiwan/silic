@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import numpy as np, pandas as pd, torch, cv2, os, argparse, math
+import numpy as np, pandas as pd, torch, cv2, os, time, shutil
 import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap, LinearSegmentedColormap
+from matplotlib.colors import ListedColormap
 from matplotlib import cm
 from pydub import AudioSegment, effects, scipy_effects
 from nnAudio import Spectrogram
@@ -419,3 +419,77 @@ def draw_labels(silic, labels, outputpath=None):
   #img_pil.show()
   print(targetpath, 'saved')
   return targetpath
+
+
+def browser(audiosource, weights='model/exp20/best.pt', step=1000, targetclasses=[], conf_thres=0.1):
+  t0 = time.time()
+  # init
+  result_path = 'result'
+  audio_path = os.path.join(result_path, 'audio')
+  linear_path = os.path.join(result_path, 'linear')
+  rainbow_path = os.path.join(result_path, 'rainbow')
+  lable_path = os.path.join(result_path, 'label')
+  js_path = os.path.join(result_path, 'js')
+  if os.path.isdir(result_path):
+    shutil.rmtree(result_path, ignore_errors=True)
+  os.mkdir(result_path)
+  os.mkdir(audio_path)
+  os.mkdir(linear_path)
+  os.mkdir(rainbow_path)
+  os.mkdir(lable_path)
+  os.mkdir(js_path)
+  shutil.copyfile('browser/index.html', os.path.join(result_path, 'index.html'))
+  all_labels = pd.DataFrame()
+  model = Silic()
+  audiofile = None
+  if os.path.isfile(audiosource):
+    sourthpath = ''
+    audiofiles = [audiosource]
+  elif os.path.isdir(audiosource):
+    sourthpath = audiosource
+    audiofiles = os.listdir(audiosource)
+    print(len(audiofiles), 'files found.')
+  i = 0
+  for audiofile in audiofiles:
+    audiofile = os.path.join(sourthpath, audiofile)
+    if not audiofile.split('.')[-1].lower() in ['mp3', 'wma', 'm4a', 'ogg', 'wav', 'mp4', 'wma', 'aac']:
+      continue
+    model.audio(audiofile)
+    i += 1
+    shutil.copyfile(audiofile, os.path.join(audio_path, model.audiofilename))
+    model.tfr(targetfilepath=os.path.join(linear_path, model.audiofilename_without_ext+'.png'))
+    labels = model.detect(weights=weights, step=step, targetclasses=targetclasses, conf_thres=conf_thres, targetfilepath=os.path.join(rainbow_path, model.audiofilename_without_ext+'.png'))
+    newlabels = clean_multi_boxes(labels)
+    newlabels['file'] = model.audiofilename
+    if all_labels.shape[0] > 0:
+      all_labels = all_labels.append(newlabels, ignore_index = True)
+    else:
+      all_labels = newlabels
+    print("%s sounds of %s species is/are found in %s" %(newlabels.shape[0], len(newlabels['classid'].unique()), audiofile))
+
+  if all_labels.shape[0] == 0:
+    print('No sounds found!')
+  else:
+    all_labels.to_csv(os.path.join(lable_path, 'labels.csv'), index=False)
+    print('%s sounds of %s species is/are found in %s recording(s). Preparing the browser package ...' %(all_labels.shape[0], len(all_labels['classid'].unique()), i))
+    df_classes = pd.read_csv(weights.replace('best.pt', 'soundclass.csv'))
+    if targetclasses:
+      df_classes = df_classes[df_classes['sounclass_id'].isin(targetclasses)]
+    else:
+      names = all_labels['classid'].unique()
+      df_classes = df_classes[df_classes['sounclass_id'].isin(names)]
+    with open(os.path.join(js_path, 'soundclass.js'), 'w', newline='', encoding='utf-8') as csv_file:
+      csv_file.write('var sounds = { \n')
+      for index, row in df_classes.iterrows():
+        csv_file.write('"%s": ["%s", "%s", "%s"], \n' %(row['sounclass_id'], row['species_name'], row['sound_class'], row['scientific_name']))
+      csv_file.write('};')
+
+    with open(os.path.join(js_path, 'labels.js'), 'w', newline='', encoding='utf-8') as f:
+      f.write('var  labels  =  [' + '\n')
+      for index, label in all_labels.iterrows():
+        f.write("['{}', {}, {}, {}, {}, {}, {}],\n".format(label['file'], label['time_begin'], label['time_end'], label['freq_low'], label['freq_high'], label['classid'], label['score']))
+      f.write('];' + '\n')
+    
+    shutil.make_archive('result', 'zip', result_path)
+    print('Finished. The browser package is compressed and named result.zip')
+    print(time.time()-t0, 'used.')
