@@ -424,7 +424,7 @@ def draw_labels(silic, labels, outputpath=None):
 def browser(audiosource, weights='model/exp20/best.pt', step=1000, targetclasses=[], conf_thres=0.1):
   t0 = time.time()
   # init
-  result_path = 'result'
+  result_path = 'result_silic'
   audio_path = os.path.join(result_path, 'audio')
   linear_path = os.path.join(result_path, 'linear')
   rainbow_path = os.path.join(result_path, 'rainbow')
@@ -459,13 +459,17 @@ def browser(audiosource, weights='model/exp20/best.pt', step=1000, targetclasses
     shutil.copyfile(audiofile, os.path.join(audio_path, model.audiofilename))
     model.tfr(targetfilepath=os.path.join(linear_path, model.audiofilename_without_ext+'.png'))
     labels = model.detect(weights=weights, step=step, targetclasses=targetclasses, conf_thres=conf_thres, targetfilepath=os.path.join(rainbow_path, model.audiofilename_without_ext+'.png'))
-    newlabels = clean_multi_boxes(labels)
-    newlabels['file'] = model.audiofilename
-    if all_labels.shape[0] > 0:
-      all_labels = all_labels.append(newlabels, ignore_index = True)
+    if len(labels) == 1:
+      print("No sound found in %s." %audiofile)
     else:
-      all_labels = newlabels
-    print("%s sounds of %s species is/are found in %s" %(newlabels.shape[0], len(newlabels['classid'].unique()), audiofile))
+      newlabels = clean_multi_boxes(labels)
+      newlabels['file'] = model.audiofilename
+      newlabels.to_csv(os.path.join(lable_path, model.audiofilename_without_ext+'.csv'), index=False)
+      if all_labels.shape[0] > 0:
+        all_labels = all_labels.append(newlabels, ignore_index = True)
+      else:
+        all_labels = newlabels
+      print("%s sounds of %s species is/are found in %s" %(newlabels.shape[0], len(newlabels['classid'].unique()), audiofile))
 
   if all_labels.shape[0] == 0:
     print('No sounds found!')
@@ -490,6 +494,6 @@ def browser(audiosource, weights='model/exp20/best.pt', step=1000, targetclasses
         f.write("['{}', {}, {}, {}, {}, {}, {}],\n".format(label['file'], label['time_begin'], label['time_end'], label['freq_low'], label['freq_high'], label['classid'], label['score']))
       f.write('];' + '\n')
     
-    shutil.make_archive('result', 'zip', result_path)
+    shutil.make_archive('result_silic', 'zip', result_path)
     print('Finished. The browser package is compressed and named result.zip')
     print(time.time()-t0, 'used.')
