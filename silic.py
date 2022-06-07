@@ -239,7 +239,7 @@ class Silic:
       pass
     else:
       self.model_path = weights
-      model = attempt_load(self.model_path, device=self.device)
+      model = attempt_load(self.model_path, map_location=self.device)
       self.names = model.module.names if hasattr(model, 'module') else model.names
       model.float()
       self.model = model
