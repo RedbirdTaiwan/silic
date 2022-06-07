@@ -5,8 +5,7 @@ from matplotlib.colors import ListedColormap
 from matplotlib import cm
 from pydub import AudioSegment, effects, scipy_effects
 from nnAudio import Spectrogram
-# from yolov5.models.experimental import attempt_load
-from yolov5.models.common import DetectMultiBackend
+from yolov5.models.experimental import attempt_load
 from yolov5.utils.datasets import letterbox
 from yolov5.utils.general import non_max_suppression, scale_coords, xyxy2xywh
 from PIL import ImageFont, ImageDraw, Image
@@ -240,8 +239,10 @@ class Silic:
       pass
     else:
       self.model_path = weights
-      self.model = DetectMultiBackend(self.model_path, device=self.device)
-      self.names = self.model.module.names if hasattr(self.model, 'module') else self.model.names
+      model = attempt_load(self.model_path, device=self.device)
+      self.names = model.module.names if hasattr(model, 'module') else model.names
+      model.float()
+      self.model = model
       self.soundclasses = pd.read_csv(self.model_path.replace('best.pt', 'soundclass.csv'), encoding='utf8', index_col='sounclass_id').T.to_dict()
     if targetclasses:
       classes = [self.names.index(name) for name in targetclasses]
