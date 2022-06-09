@@ -113,6 +113,7 @@ class Silic:
     return targetmp3path
     
   def spectrogram(self, audiodata, spect_type='linear', rainbow_bands=5):
+    """
     plt.rcParams['font.size'] = '16'
     plt.rcParams['axes.grid'] = False
     plt.rcParams['xtick.labelsize'] = False
@@ -122,6 +123,7 @@ class Silic:
     plt.rcParams['ytick.left'] = False
     plt.rcParams['ytick.right'] = False
     plt.rcParams.update({'font.size': 16})
+    """
     if spect_type in ['mel', 'rainbow']:
       spec = self.spec_mel_layer(audiodata)
       w = spec.size()[2]/55
