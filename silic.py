@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import numpy as np, pandas as pd, torch, cv2, os, time, shutil
+import numpy as np, pandas as pd, torch, cv2, os, time, shutil, sys
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from matplotlib import cm
@@ -425,7 +425,7 @@ def draw_labels(silic, labels, outputpath=None):
   return targetpath
 
 
-def browser(audiosource, weights='model/exp20/best.pt', step=1000, targetclasses=[], conf_thres=0.1):
+def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses=[], conf_thres=0.1):
   t0 = time.time()
   # init
   result_path = 'result_silic'
@@ -501,3 +501,6 @@ def browser(audiosource, weights='model/exp20/best.pt', step=1000, targetclasses
     shutil.make_archive('result_silic', 'zip', result_path)
     print('Finished. The browser package is compressed and named result.zip')
     print(time.time()-t0, 'used.')
+
+if __name__ == '__main__':
+  browser(sys.argv[1])
