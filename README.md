@@ -41,3 +41,4 @@ SILIC uses [Python](https://www.python.org/) language and [yolov5 package (Glenn
 
 ## Application
 - [謝宜樺（2021）兩種共域夜行性鳥類的鳴聲棲位區隔。國立東華大學自然資源與環境學系碩士論文。](http://etd.ndhu.edu.tw/cgi-bin/gs32/gsweb.cgi/ccd=iK89JD/record?r1=18&h1=0#XXXX)
+- [SILIC - Telegram Bot](https://t.me/silic_redbird_bot)
