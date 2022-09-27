@@ -425,23 +425,35 @@ def draw_labels(silic, labels, outputpath=None):
   return targetpath
 
 
-def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses=[], conf_thres=0.1):
+def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses=[], conf_thres=0.1, savepath=None, zip=True):
   t0 = time.time()
   # init
-  result_path = 'result_silic'
-  audio_path = os.path.join(result_path, 'audio')
+  if savepath and os.path.isdir(savepath):
+    result_path = savepath
+  else:
+    result_path = 'result_silic'
+  if os.path.isdir(audiosource) and audiosource == savepath:
+    audio_path = None
+  else:
+    audio_path = os.path.join(result_path, 'audio')
   linear_path = os.path.join(result_path, 'linear')
   rainbow_path = os.path.join(result_path, 'rainbow')
   lable_path = os.path.join(result_path, 'label')
   js_path = os.path.join(result_path, 'js')
-  if os.path.isdir(result_path):
-    shutil.rmtree(result_path, ignore_errors=True)
-  os.mkdir(result_path)
-  os.mkdir(audio_path)
-  os.mkdir(linear_path)
-  os.mkdir(rainbow_path)
-  os.mkdir(lable_path)
-  os.mkdir(js_path)
+  #if os.path.isdir(result_path):
+  #  shutil.rmtree(result_path, ignore_errors=True)
+  if not os.path.isdir(result_path):
+    os.mkdir(result_path)
+  if audio_path and not os.path.isdir(audio_path):
+    os.mkdir(audio_path)
+  if not os.path.isdir(linear_path):
+    os.mkdir(linear_path)
+  if not os.path.isdir(rainbow_path):
+    os.mkdir(rainbow_path)
+  if not os.path.isdir(lable_path):
+    os.mkdir(lable_path)
+  if not os.path.isdir(js_path):
+    os.mkdir(js_path)
   shutil.copyfile('browser/index.html', os.path.join(result_path, 'index.html'))
   all_labels = pd.DataFrame()
   model = Silic()
@@ -453,6 +465,9 @@ def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses
     sourthpath = audiosource
     audiofiles = os.listdir(audiosource)
     print(len(audiofiles), 'files found.')
+  else:
+    print('Files not found')
+    exit()
   i = 0
   for audiofile in audiofiles:
     audiofile = os.path.join(sourthpath, audiofile)
@@ -460,7 +475,8 @@ def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses
       continue
     model.audio(audiofile)
     i += 1
-    shutil.copyfile(audiofile, os.path.join(audio_path, model.audiofilename))
+    if audio_path:
+      shutil.copyfile(audiofile, os.path.join(audio_path, model.audiofilename))
     model.tfr(targetfilepath=os.path.join(linear_path, model.audiofilename_without_ext+'.png'))
     labels = model.detect(weights=weights, step=step, targetclasses=targetclasses, conf_thres=conf_thres, targetfilepath=os.path.join(rainbow_path, model.audiofilename_without_ext+'.png'))
     if len(labels) == 1:
@@ -498,8 +514,11 @@ def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses
         f.write("['{}', {}, {}, {}, {}, {}, {}],\n".format(label['file'], label['time_begin'], label['time_end'], label['freq_low'], label['freq_high'], label['classid'], label['score']))
       f.write('];' + '\n')
     
-    shutil.make_archive('result_silic', 'zip', result_path)
-    print('Finished. The browser package is compressed and named result.zip')
+    if zip:
+        shutil.make_archive('result_silic', 'zip', result_path)
+        print('Finished. The browser package is compressed and named result.zip')
+    else:
+        print('Finished. All results were saved in the folder %s' %result_path)
     print(time.time()-t0, 'used.')
 
 if __name__ == '__main__':
