@@ -20408,7 +20408,13 @@
 			}
 		}
 		$("#spec").attr("xlink:href", "linear/"+audioid.replace(/\.[^/.]+$/, "")+".png");
-		document.getElementById('myAudio').src = "audio/"+audioid;
+		var audio_url = "audio/"+audioid;
+		document.getElementById('myAudio').src = audio_url;
+		if(document.getElementById('myAudio').duration > 0){
+			console.log('ok');
+		}else{
+			document.getElementById('myAudio').src = audioid;
+		}
 		document.getElementById('audioid').innerHTML = audioid;
     }
 	
