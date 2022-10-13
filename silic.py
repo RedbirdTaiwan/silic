@@ -355,7 +355,7 @@ def merge_boxes(bb1, bb2):
     y2 = bb2['y2']
   return {'x1':x1, 'x2':x2, 'y1':y1, 'y2':y2}
 
-def clean_multi_boxes(labels, threshold_iou=0.25, threshold_iratio=0.9):
+def clean_multi_boxes(labels, threshold_iou=0.25, threshold_iratio=0.5):
   df = pd.DataFrame(labels[1:],columns=labels[0])
   df = df.sort_values('time_begin')
   df_results = pd.DataFrame()
