@@ -20410,11 +20410,10 @@
 		$("#spec").attr("xlink:href", "linear/"+audioid.replace(/\.[^/.]+$/, "")+".png");
 		var audio_url = "audio/"+audioid;
 		document.getElementById('myAudio').src = audio_url;
-		if(document.getElementById('myAudio').duration > 0){
-			console.log('ok');
-		}else{
+		var myAudio = new Audio(audio_url);
+		myAudio.onerror = function(){ 
 			document.getElementById('myAudio').src = audioid;
-		}
+		};
 		document.getElementById('audioid').innerHTML = audioid;
     }
 	

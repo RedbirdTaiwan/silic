@@ -258,6 +258,14 @@ class Silic:
       clip_start = round(ts/self.duration*self.rainbow_img.shape[1])
       clip_end = clip_start+round(self.clip_length/self.duration*self.rainbow_img.shape[1])
       if clip_end > self.rainbow_img.shape[1]:
+        _silence = np.full((self.rainbow_img.shape[0],clip_end-self.rainbow_img.shape[1],3),255).astype('float32')
+        _rainbow_img = np.append(self.rainbow_img,_silence,axis=1)
+        img0 = _rainbow_img[:,clip_start:clip_end]
+        img = letterbox(img0, new_shape=imgsz)[0]
+        # Convert
+        img = img[:, :, ::-1].transpose(2, 0, 1)  # BGR to RGB, to 3x416x416
+        img = np.ascontiguousarray(img)
+        dataset.append([os.path.join(self.audiopath, self.audiofilename), img, img0, ts])
         break
       img0 = self.rainbow_img[:,clip_start:clip_end]
       img = letterbox(img0, new_shape=imgsz)[0]
