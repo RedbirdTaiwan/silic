@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from matplotlib import cm
 from pydub import AudioSegment, effects, scipy_effects
+from pydub.utils import mediainfo
 from nnAudio import Spectrogram
 from yolov5.models.experimental import attempt_load
 from yolov5.utils.datasets import letterbox
@@ -28,19 +29,20 @@ def AudioStandarize(audio_file, sr=32000, device=None, high_pass=0, ultrasonic=F
   filext = audio_file[-3:].lower()
   if filext == "mp3":
       sound = AudioSegment.from_mp3(audio_file)
-  elif filext == "wma":
-      sound = AudioSegment.from_file(audio_file, "wma")
-  elif filext == "m4a":
-      sound = AudioSegment.from_file(audio_file, "m4a")
   elif filext == "ogg":
       sound = AudioSegment.from_ogg(audio_file)
   elif filext == "wav":
       sound = AudioSegment.from_wav(audio_file)
-  elif filext in ["mp4", "wma", "aac"]:
-      sound = AudioSegment.from_file(audio_file, filext)
   else:
-    print('Sorry, this file type is not permitted. The legal extensions are: wav, mp3, wma, m4a, ogg.')
-    return None
+      try:
+          info = mediainfo(audio_file)
+          if info['codec_tag_string'] in ['mp4a']:
+              sound = AudioSegment.from_file(audio_file, "m4a")
+          else:
+              sound = AudioSegment.from_file(audio_file, filext)
+      except:
+        print('Sorry, this file type is not permitted. The legal extensions are: wav, mp3, wma, m4a, ogg.')
+        return None
   original_metadata = {'channel': sound.channels, 'sample_rate':sound.frame_rate, 'sample_size':len(sound.get_array_of_samples()), 'duration':sound.duration_seconds}
   print('Origional audio: channel = %s, sample_rate = %s Hz, sample_size = %s, duration = %s s' %(original_metadata['channel'], original_metadata['sample_rate'], original_metadata['sample_size'], original_metadata['duration']))
   if ultrasonic:
