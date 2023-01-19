@@ -11625,7 +11625,7 @@
                         <select class="form-control" id="sounds" onchange="renaudios();" multiple>
                         </select>
                         Score: <input id="threshold_min" type="number" min="0" max="1" value="0.5" step="0.01" onchange="renaudios();" style="width: 60px"> ~ <input id="threshold_max" type="number" min="0" max="1" value="1" step="0.01" onchange="renaudios();" style="width: 60px">
-                        <div class="card text-white bg-success">
+                        <div class="card text-white bg-success overflow-auto" style="height:480px;">
                             <div class="card-body" style="font-size: 0.75em;">
                                 <button type="button" class="btn btn-primary btn-sm mr-1" OnClick="to_audio(this, 'Previous');">Previous</button><div class="d-inline" id="audioid"></div><button type="button" class="btn btn-primary btn-sm ml-1" OnClick="to_audio(this, 'next');">Next</button>
                                 <table width="100%" id="label_table">
