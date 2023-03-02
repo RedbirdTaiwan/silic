@@ -5,7 +5,7 @@ from matplotlib.colors import ListedColormap
 from matplotlib import cm
 from pydub import AudioSegment, effects, scipy_effects
 from pydub.utils import mediainfo
-from nnAudio import Spectrogram
+from nnAudio import features
 from yolov5.models.experimental import attempt_load
 from yolov5.utils.dataloaders import letterbox
 from yolov5.utils.general import non_max_suppression, scale_boxes, xyxy2xywh
@@ -90,8 +90,8 @@ class Silic:
       self.device = device
     else:
       self.device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-    self.spec_layer = Spectrogram.STFT(sr=sr, n_fft=n_fft, hop_length=hop_length).to(self.device)
-    self.spec_mel_layer = Spectrogram.MelSpectrogram(sr=sr, n_fft=n_fft, n_mels=n_mels, hop_length=hop_length, window='hann', center=True, pad_mode='reflect', power=2.0, htk=False, fmin=fmin, fmax=fmax, norm=1, verbose=True).to(self.device)
+    self.spec_layer = features.STFT(sr=sr, n_fft=n_fft, hop_length=hop_length).to(self.device)
+    self.spec_mel_layer = features.MelSpectrogram(sr=sr, n_fft=n_fft, n_mels=n_mels, hop_length=hop_length, window='hann', center=True, pad_mode='reflect', power=2.0, htk=False, fmin=fmin, fmax=fmax, norm=1, verbose=True).to(self.device)
     self.rainbow_img = torch.tensor([], dtype=torch.float32, device=self.device)
     self.model_path = None
     self.model = None
@@ -399,7 +399,7 @@ def clean_multi_boxes(labels, threshold_iou=0.25, threshold_iratio=0.5):
           break
       if check:
         if df_results.shape[0] > 0:
-          df_results = df_results.append(df_class[df_class.index == i], ignore_index = True)
+          df_results = pd.concat([df_results, df_class[df_class.index == i]],axis=0, ignore_index=True) 
         else:
           df_results = df_class[df_class.index == i]
   return df_results.sort_values('time_begin').reset_index(drop=True)
@@ -496,7 +496,7 @@ def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses
       newlabels['file'] = model.audiofilename
       newlabels.to_csv(os.path.join(lable_path, model.audiofilename_without_ext+'.csv'), index=False)
       if all_labels.shape[0] > 0:
-        all_labels = all_labels.append(newlabels, ignore_index = True)
+        all_labels = all_labels = pd.concat([all_labels, newlabels],axis=0, ignore_index=True) 
       else:
         all_labels = newlabels
       print("%s sounds of %s species is/are found in %s" %(newlabels.shape[0], len(newlabels['classid'].unique()), audiofile))
