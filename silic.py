@@ -7,8 +7,8 @@ from pydub import AudioSegment, effects, scipy_effects
 from pydub.utils import mediainfo
 from nnAudio import Spectrogram
 from yolov5.models.experimental import attempt_load
-from yolov5.utils.datasets import letterbox
-from yolov5.utils.general import non_max_suppression, scale_coords, xyxy2xywh
+from yolov5.utils.dataloaders import letterbox
+from yolov5.utils.general import non_max_suppression, scale_boxes, xyxy2xywh
 from PIL import ImageFont, ImageDraw, Image
 
 def speed_change(sound, speed=1.0):
@@ -243,7 +243,7 @@ class Silic:
       pass
     else:
       self.model_path = weights
-      model = attempt_load(self.model_path, map_location=self.device)
+      model = attempt_load(self.model_path, device=self.device)
       self.names = model.module.names if hasattr(model, 'module') else model.names
       model.float()
       self.model = model
@@ -289,7 +289,7 @@ class Silic:
       for det in pred:    # detections per image
         gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]    # normalization gain whwh
         if len(det):
-          det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
+          det[:, :4] = scale_boxes(img.shape[2:], det[:, :4], im0.shape).round()
           for *xyxy, conf, cls in reversed(det):
             xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()    # normalized xywh
             ttff = self.xywh2ttff(xywh)
