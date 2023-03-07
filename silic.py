@@ -249,7 +249,13 @@ class Silic:
       self.model = model
       self.soundclasses = pd.read_csv(self.model_path.replace('best.pt', 'soundclass.csv'), encoding='utf8', index_col='sounclass_id').T.to_dict()
     if targetclasses:
-      classes = [self.names.index(name) for name in targetclasses]
+      try:
+        classes = [self.names.index(name) for name in targetclasses]
+      except:
+        classes = []
+        for i in self.names.keys():
+          if self.names[i] in targetclasses:
+            classes.append(i)
     else:
       classes = None
     self.tfr(targetfilepath=targetfilepath, spect_type='rainbow')
