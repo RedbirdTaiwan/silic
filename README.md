@@ -37,7 +37,8 @@ SILIC uses [Python](https://www.python.org/) language and [yolov5 package (Glenn
  - [iNaturalist](https://www.inaturalist.org/)
 
 ## Publication
-- [Wu, S.-H., Chang, H.-W., Lin, R.-S., & Tuanmu, M.-N. (2022). SILIC: A cross database framework for automatically extracting robust biodiversity information from soundscape recordings based on object detection and a tiny training dataset. Ecological Informatics, 68, 101534. https://doi.org/10.1016/j.ecoinf.2021.101534](https://doi.org/10.1016/j.ecoinf.2021.101534)
+- [Wu, S. H., Ko, J. C. J., Lin, R. S., Tsai, W. L., & Chang, H. W. (2023). An acoustic detection dataset of birds (Aves) in montane forests using a deep learning approach. Biodiversity Data Journal, 11, e97811. https://doi.org/10.3897/BDJ.11.e97811](https://doi.org/10.3897/BDJ.11.e97811)
+- [Wu, S. H., Chang, H. W., Lin, R. S., & Tuanmu, M. N. (2022). SILIC: A cross database framework for automatically extracting robust biodiversity information from soundscape recordings based on object detection and a tiny training dataset. Ecological Informatics, 68, 101534. https://doi.org/10.1016/j.ecoinf.2021.101534](https://doi.org/10.1016/j.ecoinf.2021.101534)
 
 ## Application
 - [謝宜樺（2021）兩種共域夜行性鳥類的鳴聲棲位區隔。國立東華大學自然資源與環境學系碩士論文。](http://etd.ndhu.edu.tw/cgi-bin/gs32/gsweb.cgi/ccd=iK89JD/record?r1=18&h1=0#XXXX)
