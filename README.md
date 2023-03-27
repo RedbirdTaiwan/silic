@@ -15,3 +15,12 @@ SILIC(Sound Identification and Labeling Intelligence for Creatures) 是一個由
 - 將要辯識的影音檔放入sample
 - 執行silic.ipynb
 - 結果會存在result_silic資料匣，並壓縮成result_silic.zip檔，執行資料匣裡的index.html即可看到結果
+
+
+## 更新記錄
+### 2023/03/25
+- 輸入整個資料匣進行辯識
+
+### 2023/03/27
+- 資料匣內檔案命名為「8碼日期_6碼時間」，則輸出的CSV檔會加入「錄製日期、開始時間、結束時間」三個欄位
+- 可設定檔案路徑

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np, pandas as pd, torch, cv2, os, time, shutil, sys
 import matplotlib.pyplot as plt
+import re
 from matplotlib.colors import ListedColormap
 from matplotlib import cm
 from pydub import AudioSegment, effects, scipy_effects
@@ -10,6 +11,7 @@ from yolov5.models.experimental import attempt_load
 from yolov5.utils.dataloaders import letterbox
 from yolov5.utils.general import non_max_suppression, scale_boxes, xyxy2xywh
 from PIL import ImageFont, ImageDraw, Image
+from datetime import datetime, timedelta
 
 def speed_change(sound, speed=1.0):
     # Manually override the frame_rate. This tells the computer how many
@@ -500,6 +502,13 @@ def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses
     else:
       newlabels = clean_multi_boxes(labels)
       newlabels['file'] = model.audiofilename
+      fileName = model.audiofilename[:15]
+      pattern = r'^\d{8}_\d{6}$'
+      if re.match(pattern, fileName):
+        newlabels['錄製日期'] = datetime.strptime(model.audiofilename[:8], "%Y%m%d")
+        newlabels['開始時間'] = datetime.strptime(model.audiofilename[:15], "%Y%m%d_%H%M%S") + newlabels['time_begin'].apply(lambda x: timedelta(milliseconds=x))
+        newlabels['結束時間'] = datetime.strptime(model.audiofilename[:15], "%Y%m%d_%H%M%S") + newlabels['time_end'].apply(lambda x: timedelta(milliseconds=x))
+
       newlabels.to_csv(os.path.join(lable_path, model.audiofilename_without_ext+'.csv'), index=False, encoding='utf-8-sig')
       if all_labels.shape[0] > 0:
         all_labels = all_labels = pd.concat([all_labels, newlabels],axis=0, ignore_index=True) 
