@@ -41,10 +41,10 @@ def AudioStandarize(audio_file, sr=32000, device=None, high_pass=0, ultrasonic=F
           else:
               sound = AudioSegment.from_file(audio_file, filext)
       except:
-        print('Sorry, this file type is not permitted. The legal extensions are: wav, mp3, wma, m4a, ogg.')
+        print('很抱歉，此檔案類型不符. 目前只接授以下類型檔案: wav, mp3, wma, m4a, ogg.')
         return None
   original_metadata = {'channel': sound.channels, 'sample_rate':sound.frame_rate, 'sample_size':len(sound.get_array_of_samples()), 'duration':sound.duration_seconds}
-  print('Origional audio: channel = %s, sample_rate = %s Hz, sample_size = %s, duration = %s s' %(original_metadata['channel'], original_metadata['sample_rate'], original_metadata['sample_size'], original_metadata['duration']))
+  print('原始音訊： channel = %s, 採樣率sample_rate = %s Hz, 採樣大小sample_size = %s, 持續時間duration = %s s' %(original_metadata['channel'], original_metadata['sample_rate'], original_metadata['sample_size'], original_metadata['duration']))
   if ultrasonic:
       if sound.frame_rate > 100000: # UltraSonic
           sound = speed_change(sound, 1/12)
@@ -64,7 +64,7 @@ def AudioStandarize(audio_file, sr=32000, device=None, high_pass=0, ultrasonic=F
   songdata = np.array(sound.get_array_of_samples())
   duration = round(songdata.shape[0]/sound.frame_rate*1000) #ms
   audiodata = torch.tensor(songdata, device=device).float()
-  print('Standarized audio: channel = %s, sample_rate = %s Hz, sample_size = %s, duration = %s s' %(sound.channels, sound.frame_rate, songdata.shape[0], sound.duration_seconds))
+  print('標準化音訊： channel = %s, sample_rate = %s Hz, sample_size = %s, duration = %s s' %(sound.channels, sound.frame_rate, songdata.shape[0], sound.duration_seconds))
   return sound.frame_rate, audiodata, duration, sound, original_metadata
 
 class Silic:
@@ -111,7 +111,7 @@ class Silic:
       if not os.path.isdir(os.path.dirname(targetmp3path)):
         os.mkdir(os.path.dirname(targetmp3path))
     self.sound.export(targetmp3path, bitrate="128k", format="mp3")
-    print('Standarized audio was saved to %s' %targetmp3path)
+    print('標準化音訊已儲存至 %s' %targetmp3path)
     return targetmp3path
     
   def spectrogram(self, audiodata, spect_type='linear', rainbow_bands=5):
@@ -185,14 +185,14 @@ class Silic:
       if not os.path.isdir(os.path.dirname(targetfilepath)):
         os.mkdir(os.path.dirname(targetfilepath))
     if not os.path.isdir(os.path.dirname(targetfilepath)):
-      print('Error! Cannot find the target folder %s.' %os.path.dirname(targetfilepath))
+      print('錯誤！找不到目標資料夾。 %s.' %os.path.dirname(targetfilepath))
       exit()
     if (stop - start)/1000*self.sr > (max_sample_size):
         if not os.path.exists('tmp'):
             try:
                 os.mkdir('tmp')
             except:
-                print('Cannot create tmp folder!')
+                print('錯誤！無法建立暫存資料夾！')
                 exit()
         
         imgs = []
@@ -204,7 +204,7 @@ class Silic:
             try:
               imgs.append(self.spectrogram(data, spect_type, rainbow_bands=rainbow_bands))
             except:
-              print('error in converting')
+              print('轉換時發生錯誤')
               exit()
         self.cv2_img = cv2.hconcat(imgs)
     else:
@@ -221,7 +221,7 @@ class Silic:
     except:
       targetfilepath = '%spng' %targetfilepath[:-3]
       PILimage.save(targetfilepath, dpi=(72,72))
-    print('Spectrogram was saved to %s.'%targetfilepath)
+    print('聲譜圖 Spectrogram 儲存至 %s.'%targetfilepath)
     return targetfilepath
 
   def mel_to_freq(self, mel):
@@ -482,7 +482,7 @@ def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses
     audiofiles = os.listdir(audiosource)
     print(len(audiofiles), 'files found.')
   else:
-    print('Files not found')
+    print('錯誤！找不到檔案。')
     exit()
   i = 0
   for audiofile in audiofiles:
@@ -496,11 +496,11 @@ def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses
     model.tfr(targetfilepath=os.path.join(linear_path, model.audiofilename_without_ext+'.png'))
     labels = model.detect(weights=weights, step=step, targetclasses=targetclasses, conf_thres=conf_thres, targetfilepath=os.path.join(rainbow_path, model.audiofilename_without_ext+'.png'))
     if len(labels) == 1:
-      print("No sound found in %s." %audiofile)
+      print("錯誤！找不到聲音檔 %s." %audiofile)
     else:
       newlabels = clean_multi_boxes(labels)
       newlabels['file'] = model.audiofilename
-      newlabels.to_csv(os.path.join(lable_path, model.audiofilename_without_ext+'.csv'), index=False)
+      newlabels.to_csv(os.path.join(lable_path, model.audiofilename_without_ext+'.csv'), index=False, encoding='utf-8-sig')
       if all_labels.shape[0] > 0:
         all_labels = all_labels = pd.concat([all_labels, newlabels],axis=0, ignore_index=True) 
       else:
@@ -508,9 +508,9 @@ def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses
       print("%s sounds of %s species is/are found in %s" %(newlabels.shape[0], len(newlabels['classid'].unique()), audiofile))
 
   if all_labels.shape[0] == 0:
-    print('No sounds found!')
+    print('錯誤！找不到聲音檔')
   else:
-    all_labels.to_csv(os.path.join(lable_path, 'labels.csv'), index=False)
+    all_labels.to_csv(os.path.join(lable_path, 'labels.csv'), index=False, encoding='utf-8-sig')
     print('%s sounds of %s species is/are found in %s recording(s). Preparing the browser package ...' %(all_labels.shape[0], len(all_labels['classid'].unique()), i))
     df_classes = pd.read_csv(weights.replace('best.pt', 'soundclass.csv'))
     if targetclasses:
@@ -525,16 +525,16 @@ def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses
       csv_file.write('};')
 
     with open(os.path.join(js_path, 'labels.js'), 'w', newline='', encoding='utf-8') as f:
-      f.write('var  labels  =  [' + '\n')
+      f.write('var labels  =  [' + '\n')
       for index, label in all_labels.iterrows():
         f.write("['{}', {}, {}, {}, {}, {}, {}],\n".format(label['file'], label['time_begin'], label['time_end'], label['freq_low'], label['freq_high'], label['classid'], label['score']))
       f.write('];' + '\n')
     
     if zip:
         shutil.make_archive('result_silic', 'zip', result_path)
-        print('Finished. The browser package is compressed and named result.zip')
+        print('完成. 瀏覽器套件已壓縮並命名為 result.zip。')
     else:
-        print('Finished. All results were saved in the folder %s' %result_path)
+        print('完成. All results were saved in the folder %s' %result_path)
     print(time.time()-t0, 'used.')
 
 if __name__ == '__main__':
