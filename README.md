@@ -12,6 +12,9 @@ SILIC(Sound Identification and Labeling Intelligence for Creatures) 是一個由
 
 ## 使用方法
 - 環境設定可參考 Ta-Chih Chen 大大的這一篇 [SILIC 環境設定 for Window 10 or 11](https://medium.com/@raymond96383/silic-%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A-for-window10-or-11-f5bb77d4e64f)
+    - 安裝[git](https://git-scm.com/downloads)
+    - 安裝[python](https://www.python.org/downloads/)
+    - [FFmpeg](https://www.ffmpeg.org/download.html)
 - 將要辯識的影音檔放入sample
 - 執行silic_f.ipynb
 - 結果會存在result_silic資料匣，並壓縮成result_silic.zip檔，執行資料匣裡的index.html即可看到結果
