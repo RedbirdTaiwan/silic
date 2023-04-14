@@ -181,7 +181,7 @@ class Silic:
         stop = self.duration
     max_sample_size = 1920000
     if not targetfilepath:
-      targetfilepath = os.path.join(self.audiopath, spect_type, '%s.jpg'%self.audiofilename_without_ext)
+      targetfilepath = os.path.join(self.audiopath, spect_type, '%s.png'%self.audiofilename_without_ext)
       if not os.path.isdir(os.path.dirname(targetfilepath)):
         os.mkdir(os.path.dirname(targetfilepath))
     if not os.path.isdir(os.path.dirname(targetfilepath)):
@@ -371,7 +371,7 @@ def merge_boxes(bb1, bb2):
     y2 = bb2['y2']
   return {'x1':x1, 'x2':x2, 'y1':y1, 'y2':y2}
 
-def clean_multi_boxes(labels, threshold_iou=0.25, threshold_iratio=0.5):
+def clean_multi_boxes(labels, threshold_iou=0.1, threshold_iratio=0.25):
   df = pd.DataFrame(labels[1:],columns=labels[0])
   df = df.sort_values('time_begin')
   df_results = pd.DataFrame()
@@ -412,11 +412,11 @@ def clean_multi_boxes(labels, threshold_iou=0.25, threshold_iratio=0.5):
 
 def draw_labels(silic, labels, outputpath=None):
   if outputpath and os.path.isdir(outputpath):
-    targetpath = os.path.join(outputpath, '%s.jpg'%silic.audiofilename_without_ext)
+    targetpath = os.path.join(outputpath, '%s.png'%silic.audiofilename_without_ext)
   else:
     if not os.path.isdir(os.path.join(silic.audiopath, 'labels')):
       os.mkdir(os.path.join(silic.audiopath, 'labels'))
-    targetpath = os.path.join(silic.audiopath, 'labels', '%s.jpg'%silic.audiofilename_without_ext)
+    targetpath = os.path.join(silic.audiopath, 'labels', '%s.png'%silic.audiofilename_without_ext)
   outputimage = silic.tfr()
   img_pil = Image.open(outputimage)
   width, height = img_pil.size
@@ -441,7 +441,7 @@ def draw_labels(silic, labels, outputpath=None):
   return targetpath
 
 
-def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses=[], conf_thres=0.1, savepath=None, zip=True):
+def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses=[], conf_thres=0.1, savepath='result_silic', zip=False):
   t0 = time.time()
   # init
   if savepath and os.path.isdir(savepath):
