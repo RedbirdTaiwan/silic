@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import numpy as np, pandas as pd, torch, cv2, os, time, shutil, sys
+import numpy as np, pandas as pd, torch, cv2, os, time, shutil, sys, argparse
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from matplotlib import cm
@@ -109,7 +109,7 @@ class Silic:
     if not targetmp3path:
       targetmp3path = os.path.join(self.audiopath, 'mp3', '%s.mp3'%self.audiofilename_without_ext)
       if not os.path.isdir(os.path.dirname(targetmp3path)):
-        os.mkdir(os.path.dirname(targetmp3path))
+        os.makedirs(os.path.dirname(targetmp3path))
     self.sound.export(targetmp3path, bitrate="128k", format="mp3")
     print('Standarized audio was saved to %s' %targetmp3path)
     return targetmp3path
@@ -183,14 +183,14 @@ class Silic:
     if not targetfilepath:
       targetfilepath = os.path.join(self.audiopath, spect_type, '%s.png'%self.audiofilename_without_ext)
       if not os.path.isdir(os.path.dirname(targetfilepath)):
-        os.mkdir(os.path.dirname(targetfilepath))
+        os.makedirs(os.path.dirname(targetfilepath))
     if not os.path.isdir(os.path.dirname(targetfilepath)):
       print('Error! Cannot find the target folder %s.' %os.path.dirname(targetfilepath))
       exit()
     if (stop - start)/1000*self.sr > (max_sample_size):
         if not os.path.exists('tmp'):
             try:
-                os.mkdir('tmp')
+                os.makedirs('tmp')
             except:
                 print('Cannot create tmp folder!')
                 exit()
@@ -415,7 +415,7 @@ def draw_labels(silic, labels, outputpath=None):
     targetpath = os.path.join(outputpath, '%s.png'%silic.audiofilename_without_ext)
   else:
     if not os.path.isdir(os.path.join(silic.audiopath, 'labels')):
-      os.mkdir(os.path.join(silic.audiopath, 'labels'))
+      os.makedirs(os.path.join(silic.audiopath, 'labels'))
     targetpath = os.path.join(silic.audiopath, 'labels', '%s.png'%silic.audiofilename_without_ext)
   outputimage = silic.tfr()
   img_pil = Image.open(outputimage)
@@ -441,14 +441,19 @@ def draw_labels(silic, labels, outputpath=None):
   return targetpath
 
 
-def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses=[], conf_thres=0.1, savepath='result_silic', zip=False):
+def browser(source, model='exp24', step=1000, targetclasses='', conf_thres=0.1, savepath='result_silic', zip=False):
+  weights=f'model/{model}/best.pt'
+  if not targetclasses:
+    targetclasses = []
+  else:
+    targetclasses = [int(item) for item in targetclasses.split(',')]
   t0 = time.time()
   # init
   if savepath and os.path.isdir(savepath):
     result_path = savepath
   else:
     result_path = 'result_silic'
-  if os.path.isdir(audiosource) and audiosource == savepath:
+  if os.path.isdir(source) and source == savepath:
     audio_path = None
   else:
     audio_path = os.path.join(result_path, 'audio')
@@ -459,27 +464,27 @@ def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses
   #if os.path.isdir(result_path):
   #  shutil.rmtree(result_path, ignore_errors=True)
   if not os.path.isdir(result_path):
-    os.mkdir(result_path)
+    os.makedirs(result_path)
   if audio_path and not os.path.isdir(audio_path):
-    os.mkdir(audio_path)
+    os.makedirs(audio_path)
   if not os.path.isdir(linear_path):
-    os.mkdir(linear_path)
+    os.makedirs(linear_path)
   if not os.path.isdir(rainbow_path):
-    os.mkdir(rainbow_path)
+    os.makedirs(rainbow_path)
   if not os.path.isdir(lable_path):
-    os.mkdir(lable_path)
+    os.makedirs(lable_path)
   if not os.path.isdir(js_path):
-    os.mkdir(js_path)
+    os.makedirs(js_path)
   shutil.copyfile('browser/index.html', os.path.join(result_path, 'index.html'))
   all_labels = pd.DataFrame()
   model = Silic()
   audiofile = None
-  if os.path.isfile(audiosource):
+  if os.path.isfile(source):
     sourthpath = ''
-    audiofiles = [audiosource]
-  elif os.path.isdir(audiosource):
-    sourthpath = audiosource
-    audiofiles = os.listdir(audiosource)
+    audiofiles = [source]
+  elif os.path.isdir(source):
+    sourthpath = source
+    audiofiles = os.listdir(source)
     print(len(audiofiles), 'files found.')
   else:
     print('Files not found')
@@ -527,7 +532,7 @@ def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses
     with open(os.path.join(js_path, 'labels.js'), 'w', newline='', encoding='utf-8') as f:
       f.write('var  labels  =  [' + '\n')
       for index, label in all_labels.iterrows():
-        f.write("['{}', {}, {}, {}, {}, {}, {}],\n".format(label['file'], label['time_begin'], label['time_end'], label['freq_low'], label['freq_high'], label['classid'], label['score']))
+        f.write("['{}', {}, {}, {}, {}, {}, {}],\n".format(label['file'].replace("'", "\\'"), label['time_begin'], label['time_end'], label['freq_low'], label['freq_high'], label['classid'], label['score']))
       f.write('];' + '\n')
     
     if zip:
@@ -537,5 +542,18 @@ def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses
         print('Finished. All results were saved in the folder %s' %result_path)
     print(time.time()-t0, 'used.')
 
+def parse_opt():
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--source', type=str, help='Source of a single file or 1-level folder')
+  parser.add_argument('--model', type=str, default="exp24", help='Version of model wights')
+  parser.add_argument('--step', type=int, default=1000, help='Length of sliding window in ms.')
+  parser.add_argument('--targetclasses', type=str, default='', help='filter by class, comma-separated')
+  parser.add_argument('--conf_thres', type=float, default=0.1, help='Threshold of confidence score from 0.0 to 1.0')
+  parser.add_argument('--savepath', type=str, default='result_silic', help='Target folder of inference results archived')
+  parser.add_argument('--zip', action='store_true', help='ZIP')
+  opt = parser.parse_args()
+  return opt
+
 if __name__ == '__main__':
-  browser(sys.argv[1])
+  opt = parse_opt()
+  browser(**vars(opt))
