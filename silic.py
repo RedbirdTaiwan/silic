@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import numpy as np, pandas as pd, torch, cv2, os, time, shutil, sys, argparse
+import numpy as np, pandas as pd, torch, cv2, os, time, shutil, sys, argparse, mimetypes
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from matplotlib import cm
@@ -67,6 +67,23 @@ def AudioStandarize(audio_file, sr=32000, device=None, high_pass=0, ultrasonic=F
   print('Standarized audio: channel = %s, sample_rate = %s Hz, sample_size = %s, duration = %s s' %(sound.channels, sound.frame_rate, songdata.shape[0], sound.duration_seconds))
   return sound.frame_rate, audiodata, duration, sound, original_metadata
 
+def get_media_files(directory):
+  media_files = []
+
+  for filename in os.listdir(directory):
+    # Get the full path of the file
+    filepath = os.path.join(directory, filename)
+
+    # Guess the MIME type of the file
+    mime_type, _ = mimetypes.guess_type(filepath)
+
+    if mime_type is not None:
+      # If the MIME type is audio or video, add the filename to the list
+      if mime_type.startswith('audio') or mime_type.startswith('video'):
+        media_files.append(filename)
+
+  return media_files
+
 class Silic:
   """
     Arguments:
@@ -115,17 +132,6 @@ class Silic:
     return targetmp3path
     
   def spectrogram(self, audiodata, spect_type='linear', rainbow_bands=5):
-    """
-    plt.rcParams['font.size'] = '16'
-    plt.rcParams['axes.grid'] = False
-    plt.rcParams['xtick.labelsize'] = False
-    plt.rcParams['ytick.labelsize'] = False
-    plt.rcParams['xtick.top'] = False
-    plt.rcParams['xtick.bottom'] = False
-    plt.rcParams['ytick.left'] = False
-    plt.rcParams['ytick.right'] = False
-    plt.rcParams.update({'font.size': 16})
-    """
     if spect_type in ['mel', 'rainbow']:
       spec = self.spec_mel_layer(audiodata)
       w = spec.size()[2]/55
@@ -157,15 +163,6 @@ class Silic:
       plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
       plt.imshow(data, origin='lower', cmap='gray_r', aspect='auto')
     
-    """
-    plt.savefig(targetfilepath)
-    if show:
-      plt.show()
-    
-
-    if spect_type == 'rainbow' and rainbow_bands == 5:
-      self.rainbow_img = self.cv2_img
-    """
     fig.canvas.draw()
     img = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)
     img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
@@ -484,7 +481,7 @@ def browser(source, model='exp24', step=1000, targetclasses='', conf_thres=0.1, 
     audiofiles = [source]
   elif os.path.isdir(source):
     sourthpath = source
-    audiofiles = os.listdir(source)
+    audiofiles = get_media_files(source)
     print(len(audiofiles), 'files found.')
   else:
     print('Files not found')
