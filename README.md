@@ -17,6 +17,13 @@ SILIC uses [Python](https://www.python.org/) language and [yolov5 package (Glenn
  - Training and validation: [./dataset/Training_Validation_Dataset.txt](./dataset/Training_Validation_Dataset.txt)
  - Test with evaluation results: [./dataset/evaluation_testset.csv](./dataset/evaluation_testset.csv)
 
+
+## Install
+ - Python >= 3.10.0
+ - pip install -r requirements.txt
+ - Download and install FFmpeg from https://www.ffmpeg.org/download.html
+ - A guide for Windows 10/11 by Ta-Chih Chen [SILIC 環境設定 for Window 10 or 11](https://medium.com/@raymond96383/silic-%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A-for-window10-or-11-f5bb77d4e64f)
+
 ## Tutorials
  - Model Weights:
    -  [./model/exp12](./model/exp12) , including 27 sound classes of 16 species, updated on Apr. 2021
@@ -25,9 +32,10 @@ SILIC uses [Python](https://www.python.org/) language and [yolov5 package (Glenn
    -  [./model/exp20](./model/exp20) , including 213 sound classes of 163 species, updated on Dec. 2021
    -  [./model/exp24](./model/exp24) , including 253 sound classes of 169 species, updated on Aug. 2022
  - Scripts of detection: [./silic.ipynb](./silic.ipynb)
- - Demo video of inference results of the SILIC on detecting an camera trap video: [![Demo video](./sample/SILIC-demo.jpg)](https://www.youtube.com/watch?v=rN-JTnKBUy0)
- - A guide for Windows 10/11 by Ta-Chih Chen [SILIC 環境設定 for Window 10 or 11](https://medium.com/@raymond96383/silic-%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A-for-window10-or-11-f5bb77d4e64f)
-
+ - Demo video of inference results of the SILIC on detecting an camera trap video: 
+   -  [![Demo video](./sample/SILIC-demo.jpg)](https://www.youtube.com/watch?v=rN-JTnKBUy0)
+ - UI tool: silic-ui.py 
+   -  ![SILIC-UI](./model/silic-ui.png)
 
 ## Audio Sources
  - [Macaulay Library](https://www.macaulaylibrary.org/)
