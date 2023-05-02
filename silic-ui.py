@@ -71,11 +71,9 @@ def run():
         messagebox.showwarning('Warning','No output folder found.')
         return False
     targetclasses = []
-    if not listbox1.get(0, tk.END):
-        targetclasses = []
-    else:
+    if listbox1.get(0, tk.END):
         for item in listbox1.get(0, tk.END):
-            targetclasses.append(str(classes[item]['sounclass_id']))
+            targetclasses.append(classes[item]['sounclass_id'])
         
     media_files = get_media_files(inputfolder.get())
     text.delete("1.0", tk.END)
@@ -142,13 +140,13 @@ def run():
             newlabels = clean_multi_boxes(labels)
             newlabels['file'] = model.audiofilename
             newlabels.to_csv(os.path.join(lable_path, model.audiofilename_without_ext+'.csv'), index=False)
-        if all_labels.shape[0] > 0:
-            all_labels = all_labels = pd.concat([all_labels, newlabels],axis=0, ignore_index=True) 
-        else:
-            all_labels = newlabels
-        text.insert(tk.END, "%s sounds of %s species is/are found in %s\n" %(newlabels.shape[0], len(newlabels['classid'].unique()), audiofile))
-        text.see(tk.END)
-        root.update()
+            if all_labels.shape[0] > 0:
+                all_labels = all_labels = pd.concat([all_labels, newlabels],axis=0, ignore_index=True) 
+            else:
+                all_labels = newlabels
+            text.insert(tk.END, "%s sounds of %s species is/are found in %s\n" %(newlabels.shape[0], len(newlabels['classid'].unique()), audiofile))
+            text.see(tk.END)
+            root.update()
 
     if all_labels.shape[0] == 0:
         text.insert(tk.END, 'No sounds found!\n')
