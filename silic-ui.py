@@ -4,7 +4,6 @@ from silic import *
 
 root = tk.Tk()
 root.title('SILIC - Sound Identification and Labeling Intelligence for Creatures')
-#root.configure(bg="#847A5C")    #可以直接打顏色名稱或是找色碼表的代號
 root.iconbitmap('model/LOGO_circle.ico')
 
 inputfolder = tk.StringVar(root)
@@ -17,25 +16,7 @@ h = 600
 x = round((root.winfo_screenwidth()-w)/2)
 y = round((root.winfo_screenheight()-h)/2)
 root.geometry(f"{w}x{h}+{x}+{y}")
-"""
-def show_messagebox():
-    # messagebox.showinfo('My messagebox','Hola')
-    # messagebox.showwarning('My messagebox','Oops!')
-    # messagebox.showerror('My messagebox','Error!!!')
-    # messagebox.askokcancel('My messagebox','Cancel or not ?')
-    # messagebox.askquestion('My messagebox','Are you sure you want to leave ?')
-    # messagebox.askretrycancel('My messagebox','重試或取消?')
-    messagebox.askyesnocancel('My messagebox','是或否或取消?')
 
-noLabel = tk.Button(root, text="RUN",bg='#BFBFBF',fg="#000000", font=("Arial", 16, "bold"), relief="raised", command=show_messagebox) #建立raised標籤
-noLabel.pack(anchor='se',side='right',padx=10,pady=10)
-
-#image = Image.open("LOGO.png")
-#logo = ImageTk.PhotoImage(image)
-#label = tk.Label(root, image=logo)
-#label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
-"""
-#def browser(source, model='exp24', step=1000, targetclasses='', conf_thres=0.1, savepath='result_silic', zip=False):
 def select_input_folder():
     path = filedialog.askdirectory()
     inputfolder.set(path)
@@ -47,28 +28,16 @@ def select_output_folder():
     folder_output_path_label.config(text=path)
 
 def filter_options(event):
-    # Get current text in entry
     text = filter.get()
-
-    # Clear the listbox
     listbox2.delete(0, tk.END)
-
-    # Refill listbox with filtered options
     for option in options:
         if option.find(text) >= 0:
             listbox2.insert(tk.END, option)
 
 def shift_selection(event):
-    # Get selected item
     selected = event.widget.curselection()
-
-    # Get the listbox that fired the event
     source = event.widget
-
-    # Determine the destination listbox
     destination = listbox2 if source == listbox1 else listbox1
-
-    # Move selected item
     for i in selected:
         item = source.get(i)
         destination.insert(tk.END, item)
@@ -103,12 +72,10 @@ def run():
         return False
     targetclasses = []
     if not listbox1.get(0, tk.END):
-        #messagebox.showinfo('My messagebox', "All classes are selected.")
-        targetclasses = ''
+        targetclasses = []
     else:
         for item in listbox1.get(0, tk.END):
             targetclasses.append(str(classes[item]['sounclass_id']))
-        #messagebox.showinfo('My messagebox', "%s classes are selected." %len(targetclasses))
         
     media_files = get_media_files(inputfolder.get())
     text.delete("1.0", tk.END)
@@ -122,7 +89,6 @@ def run():
     step = 1000
     weights=f'model/{model}/best.pt'
     t0 = time.time()
-    # init
     if savepath and os.path.isdir(savepath):
         result_path = savepath
     else:
@@ -135,8 +101,6 @@ def run():
     rainbow_path = os.path.join(result_path, 'rainbow')
     lable_path = os.path.join(result_path, 'label')
     js_path = os.path.join(result_path, 'js')
-    #if os.path.isdir(result_path):
-    #  shutil.rmtree(result_path, ignore_errors=True)
     if not os.path.isdir(result_path):
         os.makedirs(result_path)
     if audio_path and not os.path.isdir(audio_path):
@@ -285,7 +249,7 @@ options = classes.keys()
 for item in options:
     listbox2.insert(tk.END, item)
 
-run_button = tk.Button(root, text="RUN",bg='#847A5C',fg="#000000", relief="raised", command=run)
+run_button = tk.Button(root, text="RUN",bg='#8BC440',fg="#000000", relief="raised", command=run)
 run_button.grid(row=5,column=0,columnspan=5,sticky=tk.E+tk.W)
 
 text = tk.Text(root, height=10)
