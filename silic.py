@@ -438,7 +438,12 @@ def draw_labels(silic, labels, outputpath=None):
   return targetpath
 
 
-def browser(source, model='exp24', step=1000, targetclasses='', conf_thres=0.1, savepath='result_silic', zip=False):
+def browser(source, model='', step=1000, targetclasses='', conf_thres=0.1, savepath='result_silic', zip=False):
+  if not model:
+    for item in os.listdir('model'):
+        if os.path.isdir('model/%s'%item):
+            model = item
+    print(f"Model {model} used.")
   weights=f'model/{model}/best.pt'
   if not targetclasses:
     targetclasses = []
@@ -491,7 +496,12 @@ def browser(source, model='exp24', step=1000, targetclasses='', conf_thres=0.1, 
     audiofile = os.path.join(sourthpath, audiofile)
     if not audiofile.split('.')[-1].lower() in ['mp3', 'wma', 'm4a', 'ogg', 'wav', 'mp4', 'wma', 'aac']:
       continue
-    model.audio(audiofile)
+    try:
+      model.audio(audiofile)
+    except Exception as e:
+      print('Error when reading %s'%audiofile)
+      print(str(e))
+      continue
     i += 1
     if audio_path:
       shutil.copyfile(audiofile, os.path.join(audio_path, model.audiofilename))
@@ -542,7 +552,7 @@ def browser(source, model='exp24', step=1000, targetclasses='', conf_thres=0.1, 
 def parse_opt():
   parser = argparse.ArgumentParser()
   parser.add_argument('--source', type=str, help='Source of a single file or 1-level folder')
-  parser.add_argument('--model', type=str, default="exp24", help='Version of model wights')
+  parser.add_argument('--model', type=str, default="", help='Version of model wights')
   parser.add_argument('--step', type=int, default=1000, help='Length of sliding window in ms.')
   parser.add_argument('--targetclasses', type=str, default='', help='filter by class, comma-separated')
   parser.add_argument('--conf_thres', type=float, default=0.1, help='Threshold of confidence score from 0.0 to 1.0')

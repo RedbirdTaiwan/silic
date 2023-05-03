@@ -126,7 +126,13 @@ def run():
         audiofile = os.path.join(sourthpath, audiofile)
         if not audiofile.split('.')[-1].lower() in ['mp3', 'wma', 'm4a', 'ogg', 'wav', 'mp4', 'wma', 'aac']:
             continue
-        model.audio(audiofile)
+        try:
+            model.audio(audiofile)
+        except Exception as e:
+            text.insert(tk.END, 'Error when reading %s.\n'%audiofile)
+            text.see(tk.END)
+            root.update()
+            continue
         i += 1
         if audio_path:
             shutil.copyfile(audiofile, os.path.join(audio_path, model.audiofilename))
