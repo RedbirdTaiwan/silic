@@ -159,7 +159,7 @@ def run():
         text.see(tk.END)
         root.update()
     else:
-        all_labels.to_csv(os.path.join(lable_path, 'labels.csv'), index=False)
+        all_labels.to_csv(os.path.join(lable_path, 'labels.csv'), index=False, encoding='utf-8-sig')
         text.insert(tk.END, '%s sounds of %s species is/are found in %s recording(s). Preparing the browser package ...\n' %(all_labels.shape[0], len(all_labels['classid'].unique()), i))
         text.see(tk.END)
         root.update()

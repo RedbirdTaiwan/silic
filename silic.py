@@ -522,7 +522,7 @@ def browser(source, model='', step=1000, targetclasses='', conf_thres=0.1, savep
   if all_labels.shape[0] == 0:
     print('No sounds found!')
   else:
-    all_labels.to_csv(os.path.join(lable_path, 'labels.csv'), index=False)
+    all_labels.to_csv(os.path.join(lable_path, 'labels.csv'), index=False, encoding='utf-8-sig')
     print('%s sounds of %s species is/are found in %s recording(s). Preparing the browser package ...' %(all_labels.shape[0], len(all_labels['classid'].unique()), i))
     df_classes = pd.read_csv(weights.replace('best.pt', 'soundclass.csv'))
     if targetclasses:
