@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import numpy as np, pandas as pd, torch, cv2, os, time, shutil, sys
+import numpy as np, pandas as pd, torch, cv2, os, time, shutil, sys, argparse, mimetypes
 import matplotlib.pyplot as plt
 import re
 from matplotlib.colors import ListedColormap
@@ -12,6 +12,7 @@ from yolov5.utils.dataloaders import letterbox
 from yolov5.utils.general import non_max_suppression, scale_boxes, xyxy2xywh
 from PIL import ImageFont, ImageDraw, Image
 from datetime import datetime, timedelta
+
 
 def speed_change(sound, speed=1.0):
     # Manually override the frame_rate. This tells the computer how many
@@ -43,10 +44,10 @@ def AudioStandarize(audio_file, sr=32000, device=None, high_pass=0, ultrasonic=F
           else:
               sound = AudioSegment.from_file(audio_file, filext)
       except:
-        print('很抱歉，此檔案類型不符. 目前只接授以下類型檔案: wav, mp3, wma, m4a, ogg.')
+        print('Sorry, this file type is not permitted. The legal extensions are: wav, mp3, wma, m4a, ogg.')
         return None
   original_metadata = {'channel': sound.channels, 'sample_rate':sound.frame_rate, 'sample_size':len(sound.get_array_of_samples()), 'duration':sound.duration_seconds}
-  print('原始音訊： channel = %s, 採樣率sample_rate = %s Hz, 採樣大小sample_size = %s, 持續時間duration = %s s' %(original_metadata['channel'], original_metadata['sample_rate'], original_metadata['sample_size'], original_metadata['duration']))
+  print('Origional audio: channel = %s, sample_rate = %s Hz, sample_size = %s, duration = %s s' %(original_metadata['channel'], original_metadata['sample_rate'], original_metadata['sample_size'], original_metadata['duration']))
   if ultrasonic:
       if sound.frame_rate > 100000: # UltraSonic
           sound = speed_change(sound, 1/12)
@@ -66,8 +67,25 @@ def AudioStandarize(audio_file, sr=32000, device=None, high_pass=0, ultrasonic=F
   songdata = np.array(sound.get_array_of_samples())
   duration = round(songdata.shape[0]/sound.frame_rate*1000) #ms
   audiodata = torch.tensor(songdata, device=device).float()
-  print('標準化音訊： channel = %s, sample_rate = %s Hz, sample_size = %s, duration = %s s' %(sound.channels, sound.frame_rate, songdata.shape[0], sound.duration_seconds))
+  print('Standarized audio: channel = %s, sample_rate = %s Hz, sample_size = %s, duration = %s s' %(sound.channels, sound.frame_rate, songdata.shape[0], sound.duration_seconds))
   return sound.frame_rate, audiodata, duration, sound, original_metadata
+
+def get_media_files(directory):
+  media_files = []
+
+  for filename in os.listdir(directory):
+    # Get the full path of the file
+    filepath = os.path.join(directory, filename)
+
+    # Guess the MIME type of the file
+    mime_type, _ = mimetypes.guess_type(filepath)
+
+    if mime_type is not None:
+      # If the MIME type is audio or video, add the filename to the list
+      if mime_type.startswith('audio') or mime_type.startswith('video'):
+        media_files.append(filename)
+
+  return media_files
 
 class Silic:
   """
@@ -111,23 +129,12 @@ class Silic:
     if not targetmp3path:
       targetmp3path = os.path.join(self.audiopath, 'mp3', '%s.mp3'%self.audiofilename_without_ext)
       if not os.path.isdir(os.path.dirname(targetmp3path)):
-        os.mkdir(os.path.dirname(targetmp3path))
+        os.makedirs(os.path.dirname(targetmp3path))
     self.sound.export(targetmp3path, bitrate="128k", format="mp3")
-    print('標準化音訊已儲存至 %s' %targetmp3path)
+    print('Standarized audio was saved to %s' %targetmp3path)
     return targetmp3path
     
   def spectrogram(self, audiodata, spect_type='linear', rainbow_bands=5):
-    """
-    plt.rcParams['font.size'] = '16'
-    plt.rcParams['axes.grid'] = False
-    plt.rcParams['xtick.labelsize'] = False
-    plt.rcParams['ytick.labelsize'] = False
-    plt.rcParams['xtick.top'] = False
-    plt.rcParams['xtick.bottom'] = False
-    plt.rcParams['ytick.left'] = False
-    plt.rcParams['ytick.right'] = False
-    plt.rcParams.update({'font.size': 16})
-    """
     if spect_type in ['mel', 'rainbow']:
       spec = self.spec_mel_layer(audiodata)
       w = spec.size()[2]/55
@@ -159,15 +166,6 @@ class Silic:
       plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
       plt.imshow(data, origin='lower', cmap='gray_r', aspect='auto')
     
-    """
-    plt.savefig(targetfilepath)
-    if show:
-      plt.show()
-    
-
-    if spect_type == 'rainbow' and rainbow_bands == 5:
-      self.rainbow_img = self.cv2_img
-    """
     fig.canvas.draw()
     img = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)
     img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
@@ -183,18 +181,18 @@ class Silic:
         stop = self.duration
     max_sample_size = 1920000
     if not targetfilepath:
-      targetfilepath = os.path.join(self.audiopath, spect_type, '%s.jpg'%self.audiofilename_without_ext)
+      targetfilepath = os.path.join(self.audiopath, spect_type, '%s.png'%self.audiofilename_without_ext)
       if not os.path.isdir(os.path.dirname(targetfilepath)):
-        os.mkdir(os.path.dirname(targetfilepath))
+        os.makedirs(os.path.dirname(targetfilepath))
     if not os.path.isdir(os.path.dirname(targetfilepath)):
-      print('錯誤！找不到目標資料夾。 %s.' %os.path.dirname(targetfilepath))
+      print('Error! Cannot find the target folder %s.' %os.path.dirname(targetfilepath))
       exit()
     if (stop - start)/1000*self.sr > (max_sample_size):
         if not os.path.exists('tmp'):
             try:
-                os.mkdir('tmp')
+                os.makedirs('tmp')
             except:
-                print('錯誤！無法建立暫存資料夾！')
+                print('Cannot create tmp folder!')
                 exit()
         
         imgs = []
@@ -206,7 +204,7 @@ class Silic:
             try:
               imgs.append(self.spectrogram(data, spect_type, rainbow_bands=rainbow_bands))
             except:
-              print('轉換時發生錯誤')
+              print('error in converting')
               exit()
         self.cv2_img = cv2.hconcat(imgs)
     else:
@@ -223,7 +221,7 @@ class Silic:
     except:
       targetfilepath = '%spng' %targetfilepath[:-3]
       PILimage.save(targetfilepath, dpi=(72,72))
-    print('聲譜圖 Spectrogram 儲存至 %s.'%targetfilepath)
+    print('Spectrogram was saved to %s.'%targetfilepath)
     return targetfilepath
 
   def mel_to_freq(self, mel):
@@ -373,7 +371,7 @@ def merge_boxes(bb1, bb2):
     y2 = bb2['y2']
   return {'x1':x1, 'x2':x2, 'y1':y1, 'y2':y2}
 
-def clean_multi_boxes(labels, threshold_iou=0.25, threshold_iratio=0.5):
+def clean_multi_boxes(labels, threshold_iou=0.1, threshold_iratio=0.25):
   df = pd.DataFrame(labels[1:],columns=labels[0])
   df = df.sort_values('time_begin')
   df_results = pd.DataFrame()
@@ -414,11 +412,11 @@ def clean_multi_boxes(labels, threshold_iou=0.25, threshold_iratio=0.5):
 
 def draw_labels(silic, labels, outputpath=None):
   if outputpath and os.path.isdir(outputpath):
-    targetpath = os.path.join(outputpath, '%s.jpg'%silic.audiofilename_without_ext)
+    targetpath = os.path.join(outputpath, '%s.png'%silic.audiofilename_without_ext)
   else:
     if not os.path.isdir(os.path.join(silic.audiopath, 'labels')):
-      os.mkdir(os.path.join(silic.audiopath, 'labels'))
-    targetpath = os.path.join(silic.audiopath, 'labels', '%s.jpg'%silic.audiofilename_without_ext)
+      os.makedirs(os.path.join(silic.audiopath, 'labels'))
+    targetpath = os.path.join(silic.audiopath, 'labels', '%s.png'%silic.audiofilename_without_ext)
   outputimage = silic.tfr()
   img_pil = Image.open(outputimage)
   width, height = img_pil.size
@@ -443,14 +441,24 @@ def draw_labels(silic, labels, outputpath=None):
   return targetpath
 
 
-def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses=[], conf_thres=0.1, savepath=None, zip=True):
+def browser(source, model='', step=1000, targetclasses='', conf_thres=0.1, savepath='result_silic', zip=False):
+  if not model:
+    for item in os.listdir('model'):
+        if os.path.isdir('model/%s'%item):
+            model = item
+    print(f"Model {model} used.")
+  weights=f'model/{model}/best.pt'
+  if not targetclasses:
+    targetclasses = []
+  else:
+    targetclasses = [int(item) for item in targetclasses.split(',')]
   t0 = time.time()
   # init
   if savepath and os.path.isdir(savepath):
     result_path = savepath
   else:
     result_path = 'result_silic'
-  if os.path.isdir(audiosource) and audiosource == savepath:
+  if os.path.isdir(source) and source == savepath:
     audio_path = None
   else:
     audio_path = os.path.join(result_path, 'audio')
@@ -461,47 +469,54 @@ def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses
   #if os.path.isdir(result_path):
   #  shutil.rmtree(result_path, ignore_errors=True)
   if not os.path.isdir(result_path):
-    os.mkdir(result_path)
+    os.makedirs(result_path)
   if audio_path and not os.path.isdir(audio_path):
-    os.mkdir(audio_path)
+    os.makedirs(audio_path)
   if not os.path.isdir(linear_path):
-    os.mkdir(linear_path)
+    os.makedirs(linear_path)
   if not os.path.isdir(rainbow_path):
-    os.mkdir(rainbow_path)
+    os.makedirs(rainbow_path)
   if not os.path.isdir(lable_path):
-    os.mkdir(lable_path)
+    os.makedirs(lable_path)
   if not os.path.isdir(js_path):
-    os.mkdir(js_path)
+    os.makedirs(js_path)
   shutil.copyfile('browser/index.html', os.path.join(result_path, 'index.html'))
   all_labels = pd.DataFrame()
   model = Silic()
   audiofile = None
-  if os.path.isfile(audiosource):
+  if os.path.isfile(source):
     sourthpath = ''
-    audiofiles = [audiosource]
-  elif os.path.isdir(audiosource):
-    sourthpath = audiosource
-    audiofiles = os.listdir(audiosource)
+    audiofiles = [source]
+  elif os.path.isdir(source):
+    sourthpath = source
+    audiofiles = get_media_files(source)
     print(len(audiofiles), 'files found.')
   else:
-    print('錯誤！找不到檔案。')
+    print('Files not found')
     exit()
   i = 0
   for audiofile in audiofiles:
     audiofile = os.path.join(sourthpath, audiofile)
     if not audiofile.split('.')[-1].lower() in ['mp3', 'wma', 'm4a', 'ogg', 'wav', 'mp4', 'wma', 'aac']:
       continue
-    model.audio(audiofile)
+    try:
+      model.audio(audiofile)
+    except Exception as e:
+      print('Error when reading %s'%audiofile)
+      print(str(e))
+      continue
     i += 1
     if audio_path:
       shutil.copyfile(audiofile, os.path.join(audio_path, model.audiofilename))
     model.tfr(targetfilepath=os.path.join(linear_path, model.audiofilename_without_ext+'.png'))
     labels = model.detect(weights=weights, step=step, targetclasses=targetclasses, conf_thres=conf_thres, targetfilepath=os.path.join(rainbow_path, model.audiofilename_without_ext+'.png'))
     if len(labels) == 1:
-      print("錯誤！找不到聲音檔 %s." %audiofile)
+      print("No sound found in %s." %audiofile)
     else:
       newlabels = clean_multi_boxes(labels)
       newlabels['file'] = model.audiofilename
+
+      # 偵測檔名，依檔名判斷日期與時間
       fileName = model.audiofilename[:15]
       pattern = r'^\d{8}_\d{6}$'
       if re.match(pattern, fileName):
@@ -509,7 +524,7 @@ def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses
         newlabels['開始時間'] = datetime.strptime(model.audiofilename[:15], "%Y%m%d_%H%M%S") + newlabels['time_begin'].apply(lambda x: timedelta(milliseconds=x))
         newlabels['結束時間'] = datetime.strptime(model.audiofilename[:15], "%Y%m%d_%H%M%S") + newlabels['time_end'].apply(lambda x: timedelta(milliseconds=x))
 
-      newlabels.to_csv(os.path.join(lable_path, model.audiofilename_without_ext+'.csv'), index=False, encoding='utf-8-sig')
+      newlabels.to_csv(os.path.join(lable_path, model.audiofilename_without_ext+'.csv'), index=False)
       if all_labels.shape[0] > 0:
         all_labels = all_labels = pd.concat([all_labels, newlabels],axis=0, ignore_index=True) 
       else:
@@ -517,7 +532,7 @@ def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses
       print("%s sounds of %s species is/are found in %s" %(newlabels.shape[0], len(newlabels['classid'].unique()), audiofile))
 
   if all_labels.shape[0] == 0:
-    print('錯誤！找不到聲音檔')
+    print('No sounds found!')
   else:
     all_labels.to_csv(os.path.join(lable_path, 'labels.csv'), index=False, encoding='utf-8-sig')
     print('%s sounds of %s species is/are found in %s recording(s). Preparing the browser package ...' %(all_labels.shape[0], len(all_labels['classid'].unique()), i))
@@ -534,17 +549,30 @@ def browser(audiosource, weights='model/exp24/best.pt', step=1000, targetclasses
       csv_file.write('};')
 
     with open(os.path.join(js_path, 'labels.js'), 'w', newline='', encoding='utf-8') as f:
-      f.write('var labels  =  [' + '\n')
+      f.write('var  labels  =  [' + '\n')
       for index, label in all_labels.iterrows():
-        f.write("['{}', {}, {}, {}, {}, {}, {}],\n".format(label['file'], label['time_begin'], label['time_end'], label['freq_low'], label['freq_high'], label['classid'], label['score']))
+        f.write("['{}', {}, {}, {}, {}, {}, {}],\n".format(label['file'].replace("'", "\\'"), label['time_begin'], label['time_end'], label['freq_low'], label['freq_high'], label['classid'], label['score']))
       f.write('];' + '\n')
     
     if zip:
         shutil.make_archive('result_silic', 'zip', result_path)
-        print('完成. 瀏覽器套件已壓縮並命名為 result.zip。')
+        print('Finished. The browser package is compressed and named result.zip')
     else:
-        print('完成. All results were saved in the folder %s' %result_path)
+        print('Finished. All results were saved in the folder %s' %result_path)
     print(time.time()-t0, 'used.')
 
+def parse_opt():
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--source', type=str, help='Source of a single file or 1-level folder')
+  parser.add_argument('--model', type=str, default="", help='Version of model wights')
+  parser.add_argument('--step', type=int, default=1000, help='Length of sliding window in ms.')
+  parser.add_argument('--targetclasses', type=str, default='', help='filter by class, comma-separated')
+  parser.add_argument('--conf_thres', type=float, default=0.1, help='Threshold of confidence score from 0.0 to 1.0')
+  parser.add_argument('--savepath', type=str, default='result_silic', help='Target folder of inference results archived')
+  parser.add_argument('--zip', action='store_true', help='ZIP')
+  opt = parser.parse_args()
+  return opt
+
 if __name__ == '__main__':
-  browser(sys.argv[1])
+  opt = parse_opt()
+  browser(**vars(opt))

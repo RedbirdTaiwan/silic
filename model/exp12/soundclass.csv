@@ -1,0 +1,28 @@
+sounclass_id,species_name,sound_class,scientific_name,freq_low,freq_high
+19,北方中杜鵑,S-01,Cuculus optatus,348,673
+65,鵂鶹,C-01,Glaucidium brodiei,831,1204
+66,鵂鶹,S-01,Glaucidium brodiei,829,1228
+88,褐鷹鴞,S-01,Ninox japonica,410,813
+97,領角鴞,C-01,Otus lettia,4314,10489
+98,領角鴞,S-01,Otus lettia,429,1071
+99,領角鴞,U,Otus lettia,447,1125
+100,黃嘴角鴞,C-01,Otus spilocephalus,1233,1834
+101,黃嘴角鴞,S-01,Otus spilocephalus,1358,1748
+102,黃嘴角鴞,U-01,Otus spilocephalus,1287,3273
+113,褐林鴞,C-01,Strix leptogrammica,568,1778
+114,褐林鴞,C-02,Strix leptogrammica,1258,2620
+115,褐林鴞,S-01,Strix leptogrammica,228,582
+116,東方灰林鴞,S-01,Strix nivicolum,320,769
+124,犬,C-01,Canis lupus familiaris,400,920
+167,大彎嘴,S-03,Megapomatorhinus erythrocnemis,1123,2029
+238,灰腳秧雞,S-01,Rallina eurizonoides,538,1352
+244,腹斑蛙,S-01,Babina adenopleura,528,3470
+294,領角鴞,S-02,Otus lettia,416,1373
+314,灰林鴿,S-01,Columba pulchricollis,140,468
+382,智人,rooster,Homo sapiens,515,1053
+471,巨嘴鴉,C-01,Corvus macrorhynchos,331,1569
+475,山羌,C-01,Muntiacus reevesi,676,1410
+478,小彎嘴,S-06,Pomatorhinus musicus,764,1381
+486,智人,Speech_Song,Homo sapiens,173,1208
+491,褐鷹鴞,S-02,Ninox japonica,363,967
+528,褐林鴞,U-01,Strix leptogrammica,221,831
