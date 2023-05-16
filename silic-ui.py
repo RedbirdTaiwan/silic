@@ -4,7 +4,10 @@ from silic import *
 
 root = tk.Tk()
 root.title('SILIC - Sound Identification and Labeling Intelligence for Creatures')
-root.iconbitmap('model/LOGO_circle.ico')
+try:
+    root.iconbitmap('model/LOGO_circle.ico')
+except:
+    pass
 
 inputfolder = tk.StringVar(root)
 outputfolder = tk.StringVar(root)
