@@ -512,7 +512,7 @@ def browser(source, model='', step=1000, targetclasses='', conf_thres=0.1, savep
     else:
       newlabels = clean_multi_boxes(labels)
       newlabels['file'] = model.audiofilename
-      newlabels.to_csv(os.path.join(lable_path, model.audiofilename_without_ext+'.csv'), index=False)
+      newlabels.to_csv(os.path.join(lable_path, model.audiofilename_without_ext+'.csv'), index=False, encoding='utf-8-sig')
       if all_labels.shape[0] > 0:
         all_labels = all_labels = pd.concat([all_labels, newlabels],axis=0, ignore_index=True) 
       else:
