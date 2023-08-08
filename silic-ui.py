@@ -1,10 +1,9 @@
 import tkinter as tk, pandas as pd, time, os
 from tkinter import messagebox, HORIZONTAL, filedialog
 from silic import *
-import re
 
 root = tk.Tk()
-root.title('SILIC - Sound Identification and Labeling Intelligence for Creatures ')
+root.title('SILIC - Sound Identification and Labeling Intelligence for Creatures')
 root.iconbitmap('model/LOGO_circle.ico')
 
 inputfolder = tk.StringVar(root)
@@ -146,15 +145,7 @@ def run():
         else:
             newlabels = clean_multi_boxes(labels)
             newlabels['file'] = model.audiofilename
-             # 偵測檔名，依檔名判斷日期與時間
-            fileName = model.audiofilename[:15]
-            pattern = r'^\d{8}_\d{6}$'
-            if re.match(pattern, fileName):
-                newlabels['錄製日期'] = datetime.strptime(model.audiofilename[:8], "%Y%m%d")
-                newlabels['開始時間'] = datetime.strptime(model.audiofilename[:15], "%Y%m%d_%H%M%S") + newlabels['time_begin'].apply(lambda x: timedelta(milliseconds=x))
-                newlabels['結束時間'] = datetime.strptime(model.audiofilename[:15], "%Y%m%d_%H%M%S") + newlabels['time_end'].apply(lambda x: timedelta(milliseconds=x))
-
-            newlabels.to_csv(os.path.join(lable_path, model.audiofilename_without_ext+'.csv'), index=False, encoding='utf-8-sig')
+            newlabels.to_csv(os.path.join(lable_path, model.audiofilename_without_ext+'.csv'), index=False)
             if all_labels.shape[0] > 0:
                 all_labels = all_labels = pd.concat([all_labels, newlabels],axis=0, ignore_index=True) 
             else:
