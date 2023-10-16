@@ -48,6 +48,7 @@ SILIC uses [Python](https://www.python.org/) language and [yolov5 package (Glenn
  - [iNaturalist](https://www.inaturalist.org/)
 
 ## Publication
+- [Wu, S. H., Ko, J. C. J., Lin, R. S., Chang-Yang, C. H., & Chang, H. W. (2023). Evaluating community-wide temporal sampling in passive acoustic monitoring: A comprehensive study of avian vocal patterns in subtropical montane forests. F1000Research, 12, 1299. https://doi.org/10.12688/f1000research.141951.1](https://doi.org/10.12688/f1000research.141951.1)
 - [Wu, S. H., Ko, J. C. J., Lin, R. S., Tsai, W. L., & Chang, H. W. (2023). An acoustic detection dataset of birds (Aves) in montane forests using a deep learning approach. Biodiversity Data Journal, 11, e97811. https://doi.org/10.3897/BDJ.11.e97811](https://doi.org/10.3897/BDJ.11.e97811)
 - [Wu, S. H., Chang, H. W., Lin, R. S., & Tuanmu, M. N. (2022). SILIC: A cross database framework for automatically extracting robust biodiversity information from soundscape recordings based on object detection and a tiny training dataset. Ecological Informatics, 68, 101534. https://doi.org/10.1016/j.ecoinf.2021.101534](https://doi.org/10.1016/j.ecoinf.2021.101534)
 
