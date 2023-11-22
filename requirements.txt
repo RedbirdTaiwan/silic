@@ -77,9 +77,9 @@ tensorboard-plugin-wit==1.8.1
 termcolor==2.2.0
 terminaltables==3.1.10
 thop==0.1.1.post2209072238
-torch==2.0.0+cu118
-torchaudio==2.0.1+cu118
-torchvision==0.15.1+cu118
+torch==2.0.0
+torchaudio==2.0.1
+torchvision==0.15.1
 tqdm==4.65.0
 traitlets==5.9.0
 typing_extensions==4.5.0
