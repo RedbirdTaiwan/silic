@@ -49,11 +49,12 @@ SILIC uses [Python](https://www.python.org/) language and [yolov5 package (Glenn
  - [iNaturalist](https://www.inaturalist.org/)
 
 ## Publication
-- [Wu, S. H., Ko, J. C. J., Lin, R. S., Chang-Yang, C. H., & Chang, H. W. (2023). Evaluating community-wide temporal sampling in passive acoustic monitoring: A comprehensive study of avian vocal patterns in subtropical montane forests. F1000Research, 12, 1299. https://doi.org/10.12688/f1000research.141951.1](https://doi.org/10.12688/f1000research.141951.1)
+- [Wu, S. H., Ko, J. C. J., Lin, R. S., Chang-Yang, C. H., & Chang, H. W. (2023). Evaluating community-wide temporal sampling in passive acoustic monitoring: A comprehensive study of avian vocal patterns in subtropical montane forests. F1000Research, 12, 1299. https://doi.org/10.12688/f1000research.141951.2](https://doi.org/10.12688/f1000research.141951.2)
 - [Wu, S. H., Ko, J. C. J., Lin, R. S., Tsai, W. L., & Chang, H. W. (2023). An acoustic detection dataset of birds (Aves) in montane forests using a deep learning approach. Biodiversity Data Journal, 11, e97811. https://doi.org/10.3897/BDJ.11.e97811](https://doi.org/10.3897/BDJ.11.e97811)
 - [Wu, S. H., Chang, H. W., Lin, R. S., & Tuanmu, M. N. (2022). SILIC: A cross database framework for automatically extracting robust biodiversity information from soundscape recordings based on object detection and a tiny training dataset. Ecological Informatics, 68, 101534. https://doi.org/10.1016/j.ecoinf.2021.101534](https://doi.org/10.1016/j.ecoinf.2021.101534)
 
 ## Application
+- [陳明芫（2023）以人工智慧物種辨識工具探索大安森林公園的鳥類聲景。國立臺灣大學森林環境暨資源學系碩士論文](https://tdr.lib.ntu.edu.tw/handle/123456789/88070)。
 - [謝宜樺（2021）兩種共域夜行性鳥類的鳴聲棲位區隔。國立東華大學自然資源與環境學系碩士論文。](http://etd.ndhu.edu.tw/cgi-bin/gs32/gsweb.cgi/ccd=iK89JD/record?r1=18&h1=0#XXXX)
 - [SILIC - Telegram Bot](https://t.me/silic_redbird_bot)
 - [Wu S, Tsai W, Ko J C (2022). Acoustic detections of vertebrates using SILIC in Yushan National Park, Taiwan. Taiwan Endemic Species Research Institute. Sampling event dataset https://doi.org/10.15468/bbr9k7 accessed via GBIF.org on 2022-10-10.](https://doi.org/10.15468/bbr9k7)
