@@ -146,7 +146,7 @@ def run():
             text.see(tk.END)
             root.update()
         else:
-            newlabels = clean_multi_boxes(labels)
+            newlabels = clean_multi_boxes(audiofile, labels)
             newlabels['file'] = model.audiofilename
             newlabels.to_csv(os.path.join(lable_path, model.audiofilename_without_ext+'.csv'), index=False)
             if all_labels.shape[0] > 0:

@@ -6,6 +6,7 @@ from matplotlib import cm
 from pydub import AudioSegment, effects, scipy_effects
 from pydub.utils import mediainfo
 from nnAudio import features
+import scipy.signal as signal
 from yolov5.models.experimental import attempt_load
 from yolov5.utils.dataloaders import letterbox
 from yolov5.utils.general import non_max_suppression, scale_boxes, xyxy2xywh
@@ -123,6 +124,7 @@ class Silic:
     self.audiopath = os.path.dirname(audio_file)
     self.audiofileext = audio_file.split('.')[-1]
     self.sr, self.audiodata, self.duration, self.sound, self.original_metadata = AudioStandarize(audio_file, self.sr, self.device, high_pass=self.fmin, ultrasonic=ultrasonic)
+    self.original_sound = AudioSegment.from_file(audio_file)
 
   def save_standarized(self, targetmp3path=None):
     if not targetmp3path:
@@ -282,7 +284,7 @@ class Silic:
       dataset.append([os.path.join(self.audiopath, self.audiofilename), img, img0, ts])
     
     
-    labels = [['file', 'classid', 'species_name', 'sound_class', 'scientific_name', "time_begin", "time_end", "freq_low", "freq_high", "score"]]
+    labels = [['file', 'classid', 'species_name', 'sound_class', 'scientific_name', "time_begin", "time_end", "freq_low", "freq_high", "score", "average_power_density", "SNR"]]
     for path, img, im0, time_start in dataset:
       img = torch.from_numpy(img).float().to(self.device)
       img /= 255.0  # 0 - 255 to 0.0 - 1.0
@@ -303,10 +305,64 @@ class Silic:
             species_name = self.soundclasses[classid]['species_name']
             sound_class = self.soundclasses[classid]['sound_class']
             scientific_name = self.soundclasses[classid]['scientific_name']
-            labels.append([path, classid, species_name, sound_class, scientific_name, round(time_start+ts), round(time_start+te), fl, fh, round(float(conf),3)])
+            audio = AudioSegment.from_file(os.path.join(self.audiopath, self.audiofilename))
+            if audio.channels == 2:
+                audio = audio.split_to_mono()[0]  # 轉換為單聲道
+            average_power_density_dbfs, snr_db = signal_power(audio, ts/1000, te/1000, fl, fh)
+            labels.append([path, classid, species_name, sound_class, scientific_name, round(time_start+ts), round(time_start+te), fl, fh, round(float(conf),3), average_power_density_dbfs, snr_db])
     
     return labels
     
+def signal_power(audio, start_time, end_time, low_freq, high_freq):
+  sr = audio.frame_rate
+
+  # 取得 bit depth
+  bit_depth = audio.sample_width * 8
+
+  # 將音訊轉換為 NumPy 陣列
+  samples = np.array(audio.get_array_of_samples())
+
+  # 設定特定時間範圍（以秒為單位）
+  start_sample = int(start_time * sr)
+  end_sample = int(end_time * sr)
+  y_segment = samples[start_sample:end_sample]
+
+  # 設定特定頻率範圍（例如 300-3000 Hz）
+  nyquist = 0.5 * sr
+  low = low_freq / nyquist
+  high = high_freq / nyquist
+
+  # 設計帶通濾波器
+  b, a = signal.butter(4, [low, high], btype='band')
+  filtered_signal = signal.lfilter(b, a, y_segment)
+
+  # 計算功率密度譜
+  f, Pxx = signal.welch(y_segment, sr, nperseg=1024)
+
+  # 選擇特定頻率範圍內的功率密度
+  freq_mask = (f >= low_freq) & (f <= high_freq)
+  Pxx_in_band = Pxx[freq_mask]
+
+  # 計算特定頻率範圍內的平均功率密度
+  average_power_density = np.mean(Pxx_in_band)
+
+  # 根據 bit depth 計算最大可能振幅
+  max_possible_amplitude = 2 ** (bit_depth - 1)
+
+  # 將平均功率密度轉換為 dB FS
+  average_power_density_dbfs = 10 * np.log10(average_power_density / (max_possible_amplitude ** 2))
+
+  # 計算訊號能量
+  signal_power = np.mean(filtered_signal**2)
+
+  # 假設噪聲（這裡用信號減去濾波後的信號作為噪聲估計）
+  noise = y_segment - filtered_signal
+  noise_power = np.mean(noise**2)
+
+  # 計算 SNR（以分貝為單位）
+  snr_db = 10 * np.log10(signal_power / noise_power)
+  return round(average_power_density_dbfs, 1), round(snr_db, 1)
+  
 def get_iou(bb1, bb2):
   """
   © https://github.com/MartinThoma/algorithms/blob/master/CV/IoU/IoU.py
@@ -370,11 +426,14 @@ def merge_boxes(bb1, bb2):
     y2 = bb2['y2']
   return {'x1':x1, 'x2':x2, 'y1':y1, 'y2':y2}
 
-def clean_multi_boxes(labels, threshold_iou=0.1, threshold_iratio=0.25):
+def clean_multi_boxes(audiofile, labels, threshold_iou=0.1, threshold_iratio=0.25):
   df = pd.DataFrame(labels[1:],columns=labels[0])
   df = df.sort_values('time_begin')
   df_results = pd.DataFrame()
   soundclasses = df['classid'].unique()
+  audio = AudioSegment.from_file(audiofile)
+  if audio.channels == 2:
+      audio = audio.split_to_mono()[0]  # 轉換為單聲道
   for classid in soundclasses:
     df_class = df[df['classid']==classid].reset_index(drop=True)
     for i in range(0, df_class.shape[0]):
@@ -392,12 +451,15 @@ def clean_multi_boxes(labels, threshold_iou=0.1, threshold_iratio=0.25):
           if df_class.loc[j, 'score'] > score:
             score = df_class.loc[j, 'score']
           merge_box = merge_boxes(bb1, bb2)
+          average_power_density, SNR = signal_power(audio, merge_box['x1']/1000, merge_box['x2']/1000, merge_box['y1'], merge_box['y2'])
           try:
             df_class.loc[j, 'time_begin'] = merge_box['x1']
             df_class.loc[j, 'time_end'] = merge_box['x2']
             df_class.loc[j, 'freq_low'] = merge_box['y1']
             df_class.loc[j, 'freq_high'] = merge_box['y2']
             df_class.loc[j, 'score'] = score
+            df_class.loc[j, 'average_power_density'] = average_power_density
+            df_class.loc[j, 'SNR'] = SNR
           except:
             print(j, df_class.iloc[j])
           check = False
@@ -512,7 +574,7 @@ def browser(source, model='', step=1000, targetclasses='', conf_thres=0.1, savep
     if len(labels) == 1:
       print("No sound found in %s." %audiofile)
     else:
-      newlabels = clean_multi_boxes(labels)
+      newlabels = clean_multi_boxes(audiofile, labels)
       newlabels['file'] = model.audiofilename
       newlabels.to_csv(os.path.join(lable_path, model.audiofilename_without_ext+'.csv'), index=False, encoding='utf-8-sig')
       if all_labels.shape[0] > 0:
