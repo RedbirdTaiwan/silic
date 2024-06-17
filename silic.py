@@ -11,8 +11,6 @@ from yolov5.models.experimental import attempt_load
 from yolov5.utils.dataloaders import letterbox
 from yolov5.utils.general import non_max_suppression, scale_boxes, xyxy2xywh
 from PIL import ImageFont, ImageDraw, Image
-import pathlib
-pathlib.PosixPath = pathlib.WindowsPath
 
 def speed_change(sound, speed=1.0):
     # Manually override the frame_rate. This tells the computer how many
