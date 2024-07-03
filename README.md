@@ -55,6 +55,7 @@ SILIC uses [Python](https://www.python.org/) language and [yolov5 package (Glenn
 - [Wu, S. H., Chang, H. W., Lin, R. S., & Tuanmu, M. N. (2022). SILIC: A cross database framework for automatically extracting robust biodiversity information from soundscape recordings based on object detection and a tiny training dataset. Ecological Informatics, 68, 101534. https://doi.org/10.1016/j.ecoinf.2021.101534](https://doi.org/10.1016/j.ecoinf.2021.101534)
 
 ## Application
+- [吳昭頤（2024）利用自動錄音系統進行水田蛙類鳴叫物候之研究。國立東華大學自然資源與環境學系碩士論文](https://etd.ndhu.edu.tw/cgi-bin/gs32/gsweb.cgi/ccd=D8Soqs/search?mode=basic)。
 - [陳明芫（2023）以人工智慧物種辨識工具探索大安森林公園的鳥類聲景。國立臺灣大學森林環境暨資源學系碩士論文](https://tdr.lib.ntu.edu.tw/handle/123456789/88070)。
 - [謝宜樺（2021）兩種共域夜行性鳥類的鳴聲棲位區隔。國立東華大學自然資源與環境學系碩士論文。](http://etd.ndhu.edu.tw/cgi-bin/gs32/gsweb.cgi/ccd=iK89JD/record?r1=18&h1=0#XXXX)
 - [SILIC - Telegram Bot](https://t.me/silic_redbird_bot)
