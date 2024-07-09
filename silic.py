@@ -306,7 +306,11 @@ class Silic:
             audio = AudioSegment.from_file(os.path.join(self.audiopath, self.audiofilename))
             if audio.channels == 2:
                 audio = audio.split_to_mono()[0]  # 轉換為單聲道
-            average_power_density_dbfs, snr_db = signal_power(audio, ts/1000, te/1000, fl, fh)
+            try:
+              average_power_density_dbfs, snr_db = signal_power(audio, ts/1000, te/1000, fl, fh)
+            except:
+              average_power_density_dbfs = 'error'
+              snr_db = 'error'
             labels.append([path, classid, species_name, sound_class, scientific_name, round(time_start+ts), round(time_start+te), fl, fh, round(float(conf),3), average_power_density_dbfs, snr_db])
     
     return labels
