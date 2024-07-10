@@ -453,7 +453,11 @@ def clean_multi_boxes(audiofile, labels, threshold_iou=0.1, threshold_iratio=0.2
           if df_class.loc[j, 'score'] > score:
             score = df_class.loc[j, 'score']
           merge_box = merge_boxes(bb1, bb2)
-          average_power_density, SNR = signal_power(audio, merge_box['x1']/1000, merge_box['x2']/1000, merge_box['y1'], merge_box['y2'])
+          try:
+            average_power_density, SNR = signal_power(audio, merge_box['x1']/1000, merge_box['x2']/1000, merge_box['y1'], merge_box['y2'])
+          except:
+            average_power_density = 'error'
+            SNR = 'error'
           try:
             df_class.loc[j, 'time_begin'] = merge_box['x1']
             df_class.loc[j, 'time_end'] = merge_box['x2']
