@@ -560,8 +560,6 @@ def browser(source, model='', step=1000, targetclasses='', conf_thres=0.1, savep
   i = 0
   for audiofile in audiofiles:
     audiofile = os.path.join(sourthpath, audiofile)
-    if not audiofile.split('.')[-1].lower() in ['mp3', 'wma', 'm4a', 'ogg', 'wav', 'mp4', 'wma', 'aac']:
-      continue
     try:
       model.audio(audiofile)
     except Exception as e:
