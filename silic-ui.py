@@ -127,7 +127,7 @@ def run():
     i = 0
     for audiofile in media_files:
         audiofile = os.path.join(sourthpath, audiofile)
-        if not audiofile.split('.')[-1].lower() in ['mp3', 'wma', 'm4a', 'ogg', 'wav', 'mp4', 'wma', 'aac']:
+        if not audiofile.split('.')[-1].lower() in ['mp3', 'wma', 'm4a', 'ogg', 'wav', 'mp4', 'wma', 'aac', 'flac']:
             continue
         try:
             model.audio(audiofile)
