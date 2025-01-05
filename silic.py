@@ -253,7 +253,10 @@ class Silic:
             classes.append(i)
     else:
       classes = None
-    self.tfr(targetfilepath=targetfilepath, spect_type='rainbow')
+    if os.path.exists(targetfilepath):
+      self.rainbow_img = np.array(Image.open(targetfilepath).convert("RGB"))[:, :, ::-1]
+    else:
+      self.tfr(targetfilepath=targetfilepath, spect_type='rainbow')
     
     # prepare input data clips
     dataset = []
@@ -504,7 +507,7 @@ def draw_labels(silic, labels, outputpath=None):
   return targetpath
 
 
-def browser(source, model='', step=1000, targetclasses='', conf_thres=0.1, savepath='result_silic', zip=False):
+def browser(source, model='', step=1000, targetclasses='', conf_thres=0.1, savepath='result_silic', zip=False, copyauduio = True):
   if not model:
     for item in os.listdir('model'):
         if os.path.isdir('model/%s'%item):
@@ -567,9 +570,10 @@ def browser(source, model='', step=1000, targetclasses='', conf_thres=0.1, savep
       print(str(e))
       continue
     i += 1
-    if audio_path:
+    if audio_path and copyauduio:
       shutil.copyfile(audiofile, os.path.join(audio_path, model.audiofilename))
-    model.tfr(targetfilepath=os.path.join(linear_path, model.audiofilename_without_ext+'.png'))
+    if not os.path.exists(os.path.join(linear_path, model.audiofilename_without_ext+'.png')):
+      model.tfr(targetfilepath=os.path.join(linear_path, model.audiofilename_without_ext+'.png'))
     labels = model.detect(weights=weights, step=step, targetclasses=targetclasses, conf_thres=conf_thres, targetfilepath=os.path.join(rainbow_path, model.audiofilename_without_ext+'.png'))
     if len(labels) == 1:
       print("No sound found in %s." %audiofile)
