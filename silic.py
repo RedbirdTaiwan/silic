@@ -24,6 +24,11 @@ def speed_change(sound, speed=1.0):
     print(sound_with_altered_frame_rate.frame_rate)
     return sound_with_altered_frame_rate.set_frame_rate(int(sound.frame_rate*speed))
 
+# 計算每個聲道的 RMS 音量
+def calculate_rms(audio_segment):
+    samples = np.array(audio_segment.get_array_of_samples())
+    return np.sqrt(np.mean(samples**2))
+
 def AudioStandarize(audio_file, sr=32000, device=None, high_pass=0, ultrasonic=False):
   if not device:
     device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
@@ -52,7 +57,14 @@ def AudioStandarize(audio_file, sr=32000, device=None, high_pass=0, ultrasonic=F
   if sound.frame_rate != sr:
       sound = sound.set_frame_rate(sr)
   if sound.channels > 1:
-      sound = sound.split_to_mono()[0]
+      left_channel = sound.split_to_mono()[0]
+      right_channel = sound.split_to_mono()[1]
+      left_rms = calculate_rms(left_channel)
+      right_rms = calculate_rms(right_channel)
+      if left_rms >= right_rms:
+        sound = left_channel
+      else:
+        sound = right_channel
   if not sound.sample_width == 2:
       sound = sound.set_sample_width(2)
   if high_pass:
