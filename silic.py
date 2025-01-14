@@ -57,14 +57,17 @@ def AudioStandarize(audio_file, sr=32000, device=None, high_pass=0, ultrasonic=F
   if sound.frame_rate != sr:
       sound = sound.set_frame_rate(sr)
   if sound.channels > 1:
-      left_channel = sound.split_to_mono()[0]
-      right_channel = sound.split_to_mono()[1]
-      left_rms = calculate_rms(left_channel)
-      right_rms = calculate_rms(right_channel)
-      if left_rms >= right_rms:
+      try:
+        left_channel = sound.split_to_mono()[0]
+        right_channel = sound.split_to_mono()[1]
+        left_rms = calculate_rms(left_channel)
+        right_rms = calculate_rms(right_channel)
+        if left_rms >= right_rms:
+          sound = left_channel
+        else:
+          sound = right_channel
+      except:
         sound = left_channel
-      else:
-        sound = right_channel
   if not sound.sample_width == 2:
       sound = sound.set_sample_width(2)
   if high_pass:
