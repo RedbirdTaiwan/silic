@@ -26,8 +26,24 @@ def speed_change(sound, speed=1.0):
 
 # 計算每個聲道的 RMS 音量
 def calculate_rms(audio_segment):
-    samples = np.array(audio_segment.get_array_of_samples())
-    return np.sqrt(np.mean(samples**2))
+    """ 計算音訊片段的 RMS 音量 """
+    samples = np.array(audio_segment.get_array_of_samples(), dtype=np.float64)  # 使用 float64 避免數值溢出
+
+    # ✅ 檢查是否為空音訊
+    if samples.size == 0:
+        return 0.0  # 避免空音訊導致錯誤
+
+    # ✅ 確保所有樣本為有限值，避免 NaN 計算
+    samples = np.nan_to_num(samples, nan=0.0, posinf=0.0, neginf=0.0)
+
+    # ✅ 計算 RMS，確保值不會變成 NaN 或負數
+    mean_square = np.mean(samples**2)
+    if mean_square < 0 or np.isnan(mean_square):  # 檢查非法值
+        return 0.0
+
+    rms_value = np.sqrt(mean_square)
+
+    return rms_value
 
 def AudioStandarize(audio_file, sr=32000, device=None, high_pass=0, ultrasonic=False):
   if not device:
