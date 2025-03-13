@@ -563,6 +563,7 @@ def browser(source, model='', step=1000, targetclasses='', conf_thres=0.1, savep
   rainbow_path = os.path.join(result_path, 'rainbow')
   lable_path = os.path.join(result_path, 'label')
   js_path = os.path.join(result_path, 'js')
+  raven_path = os.path.join(result_path, 'raven')
   #if os.path.isdir(result_path):
   #  shutil.rmtree(result_path, ignore_errors=True)
   if not os.path.isdir(result_path):
@@ -577,6 +578,8 @@ def browser(source, model='', step=1000, targetclasses='', conf_thres=0.1, savep
     os.makedirs(lable_path)
   if not os.path.isdir(js_path):
     os.makedirs(js_path)
+  if not os.path.isdir(raven_path):
+    os.makedirs(raven_path)
   shutil.copyfile('browser/index.html', os.path.join(result_path, 'index.html'))
   all_labels = pd.DataFrame()
   model = Silic()
@@ -612,6 +615,21 @@ def browser(source, model='', step=1000, targetclasses='', conf_thres=0.1, savep
       newlabels = clean_multi_boxes(audiofile, labels)
       newlabels['file'] = model.audiofilename
       newlabels.to_csv(os.path.join(lable_path, model.audiofilename_without_ext+'.csv'), index=False, encoding='utf-8-sig')
+      raven = newlabels.copy()
+      raven['Selection'] = range(1, len(raven) + 1)
+      raven['View'] = 'Spectrogram 1'
+      raven['Channel'] = '1'
+      raven['Begin Time (s)'] = raven['time_begin']/1000
+      raven['End Time (s)'] = raven['time_end']/1000
+      raven['Low Freq (Hz)'] = raven['freq_low']
+      raven['High Freq (Hz)'] = raven['freq_high']
+      raven['Delta Time (s)'] = raven['End Time (s)'] - raven['Begin Time (s)']
+      raven['Delta Freq (Hz)'] = raven['Low Freq (Hz)'] - raven['Low Freq (Hz)']
+      raven['Avg Power Density (dB FS/Hz)'] = raven['average_power_density']
+      raven['Annotation'] = raven.apply(lambda row: f"{row['species_name']} ({row['scientific_name']}) : {row['sound_class']}, Score: {row['score']}", axis=1)
+      raven = raven[['Selection','View','Channel','Begin Time (s)','End Time (s)','Low Freq (Hz)','High Freq (Hz)','Delta Time (s)','Delta Freq (Hz)','Avg Power Density (dB FS/Hz)','Annotation']]
+      raven.to_csv(os.path.join(raven_path, model.audiofilename_without_ext+'selections.txt'), index=False, sep='\t', encoding="big5", errors="ignore")
+      
       if all_labels.shape[0] > 0:
         all_labels = pd.concat([all_labels, newlabels],axis=0, ignore_index=True) 
       else:
