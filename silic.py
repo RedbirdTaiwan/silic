@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import numpy as np, pandas as pd, torch, cv2, os, time, shutil, sys, argparse, mimetypes
+import numpy as np, pandas as pd, torch, cv2, os, time, shutil, warnings, argparse, mimetypes
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from matplotlib import cm
@@ -337,7 +337,9 @@ class Silic:
             if audio.channels == 2:
                 audio = audio.split_to_mono()[0]  # 轉換為單聲道
             try:
-              average_power_density_dbfs, snr_db = signal_power(audio, ts/1000, te/1000, fl, fh)
+              with warnings.catch_warnings():
+                warnings.simplefilter("ignore", category=RuntimeWarning)
+                average_power_density_dbfs, snr_db = signal_power(audio, ts/1000, te/1000, fl, fh)
             except:
               average_power_density_dbfs = 'error'
               snr_db = 'error'
@@ -484,7 +486,9 @@ def clean_multi_boxes(audiofile, labels, threshold_iou=0.1, threshold_iratio=0.2
             score = df_class.loc[j, 'score']
           merge_box = merge_boxes(bb1, bb2)
           try:
-            average_power_density, SNR = signal_power(audio, merge_box['x1']/1000, merge_box['x2']/1000, merge_box['y1'], merge_box['y2'])
+            with warnings.catch_warnings():
+              warnings.simplefilter("ignore", category=RuntimeWarning)
+              average_power_density, SNR = signal_power(audio, merge_box['x1']/1000, merge_box['x2']/1000, merge_box['y1'], merge_box['y2'])
           except:
             average_power_density = 'error'
             SNR = 'error'
