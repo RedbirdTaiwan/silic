@@ -165,7 +165,7 @@ def run():
             raven['Avg Power Density (dB FS/Hz)'] = raven['average_power_density']
             raven['Annotation'] = raven.apply(lambda row: f"{row['species_name']} ({row['scientific_name']}) : {row['sound_class']}, Score: {row['score']}", axis=1)
             raven = raven[['Selection','View','Channel','Begin Time (s)','End Time (s)','Low Freq (Hz)','High Freq (Hz)','Delta Time (s)','Delta Freq (Hz)','Avg Power Density (dB FS/Hz)','Annotation']]
-            raven.to_csv(os.path.join(raven_path, model.audiofilename_without_ext+'selections.txt'), index=False, sep='\t', encoding="big5", errors="ignore")
+            raven.to_csv(os.path.join(raven_path, model.audiofilename_without_ext+'_selections.txt'), index=False, sep='\t', encoding="big5", errors="ignore")
 
             if all_labels.shape[0] > 0:
                 all_labels = all_labels = pd.concat([all_labels, newlabels],axis=0, ignore_index=True) 
