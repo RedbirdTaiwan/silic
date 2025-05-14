@@ -37,6 +37,7 @@ SILIC uses [Python](https://www.python.org/) language and [yolov5 package (Glenn
    -  [./model/exp30](./model/exp30) , including 302 sound classes of 202 species, updated on Mar. 2024
    -  [./model/exp31](./model/exp31) , including 364 sound classes of 257 species, updated on Jun. 2024
    -  [./model/exp32](./model/exp32) , including 390 sound classes of 272 species, updated on Mar. 2025
+   -  [./model/exp32a](./model/exp32a) , minor fine-tuning of the soundclassID: 39	南亞夜鷹 (*Caprimulgus affinis*)	S-01	, updated on May 2025
  - Scripts of detection: [./silic.ipynb](./silic.ipynb)
  - Demo video of inference results of the SILIC on detecting an camera trap video: 
    -  [![Demo video](./sample/SILIC-demo.jpg)](https://www.youtube.com/watch?v=rN-JTnKBUy0)
