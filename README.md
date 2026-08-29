@@ -1,4 +1,7 @@
 # SILIC
+## **SILIC v.2 released** 
+SILIC v2 [https://github.com/RedbirdTaiwan/silic2](https://github.com/RedbirdTaiwan/silic2) released at Aug. 2026
+
 ## Sound Identification and Labeling Intelligence for Creatures
 ![SILIC](./model/silic_logo_full.svg)
 
